@@ -1,25 +1,31 @@
-﻿using CloudExchange.UseCases.Services;
+﻿using CloudExchange.Domain.Models;
+using CloudExchange.UseCases.Services;
 
 namespace CloudExchange.API.Backgrounds
 {
     public class DeleteScheduler : BackgroundService
     {
-        public const int Interval = 10;
+        private const int _interval = Descriptor.LifetimeMinumum;
 
-        private readonly ISchedulerService _schedulerService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public DeleteScheduler(ISchedulerService schedulerService)
+        public DeleteScheduler(IServiceProvider serviceProvider)
         {
-            _schedulerService = schedulerService;
+            _serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _ = await _schedulerService.ScheduleDelete(Interval);
+                using(var scope =  _serviceProvider.CreateScope())
+                {
+                    ISchedulerService schedulerService = scope.ServiceProvider.GetRequiredService<ISchedulerService>();
 
-                await Task.Delay(Interval * 1000);
+                    _ = await schedulerService.ScheduleDelete(_interval);
+
+                    await Task.Delay(_interval * 1000);
+                }
             }
         }
     }

@@ -9,6 +9,6 @@ namespace CloudExchange.API.Extensions.Startup
         public static IServiceCollection AddServices(this IServiceCollection services) =>
             services.AddScoped<IUserFileService, FileService>()
                     .AddScoped<IServerFileService, FileService>()
-                    .AddSingleton<ISchedulerService, SchedulerService>();
+                    .AddScoped<ISchedulerService, SchedulerService>();
     }
 }

@@ -25,8 +25,8 @@ namespace CloudExchange.API.Contracts
 
             #region Lifetime
 
-            RuleFor(x => x.Lifetime).Must(x => x > 0 && x <= Descriptor.LifetimeMaximum)
-                                    .WithMessage($"The file lifetime can`t be less than 0 and more than {Descriptor.LifetimeMaximum} seconds.");
+            RuleFor(x => x.Lifetime).Must(x => x >= Descriptor.LifetimeMinumum && x <= Descriptor.LifetimeMaximum)
+                                    .WithMessage($"The file lifetime can`t be less than {Descriptor.LifetimeMinumum} and more than {Descriptor.LifetimeMaximum} seconds.");
 
             #endregion
 

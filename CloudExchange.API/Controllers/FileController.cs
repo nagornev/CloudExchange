@@ -52,11 +52,11 @@ namespace CloudExchange.API.Controllers
         public async Task<IResult> Create([FromForm] CreateContract contract)
         {
             Result<Descriptor> createResult = await _userFileService.CreateFile(contract.File.GetName(),
-                                                                            contract.File.GetWeight(),
-                                                                            contract.File.OpenReadStream(),
-                                                                            contract.Lifetime,
-                                                                            contract.Root,
-                                                                            contract.Download);
+                                                                                contract.File.GetWeight(),
+                                                                                contract.File.OpenReadStream(),
+                                                                                contract.Lifetime,
+                                                                                contract.Root,
+                                                                                contract.Download);
 
             return createResult.Success ?
                         Results.Ok(createResult) :

@@ -11,6 +11,11 @@ namespace CloudExchange.Domain.Models
         public const long WeightMaximum = 10_737_418_240;
 
         /// <summary>
+        /// Minumum file lifetime in seconds.
+        /// </summary>
+        public const int LifetimeMinumum = 600;
+
+        /// <summary>
         /// Maximum file lifetime in seconds.
         /// </summary>
         public const int LifetimeMaximum = 604_800;
@@ -93,8 +98,8 @@ namespace CloudExchange.Domain.Models
             if (weight > WeightMaximum)
                 return Result<Descriptor>.Failure(error => error.InvalidArgument($"The file weight can`t be more than {WeightMaximum} KB."));
 
-            if (!(lifetime > 0 && lifetime < LifetimeMaximum))
-                return Result<Descriptor>.Failure(error => error.InvalidArgument($"The file lifetime can`t be less than 0 and more than {LifetimeMaximum} seconds."));
+            if (!(lifetime >= LifetimeMinumum && lifetime <= LifetimeMaximum))
+                return Result<Descriptor>.Failure(error => error.InvalidArgument($"The file lifetime can`t be less than {LifetimeMinumum} and more than {LifetimeMaximum} seconds."));
 
             return Result<Descriptor>.Successful(new Descriptor(id,
                                                                 name,
