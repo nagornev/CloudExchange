@@ -11,5 +11,10 @@
         {
             return (int)(file.Length / 1000);
         }
+
+        public static Stream GetData(this IFormFile file)
+        {
+            return file.OpenReadStream();
+        }
     }
 }

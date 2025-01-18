@@ -53,7 +53,7 @@ namespace CloudExchange.API.Controllers
         {
             Result<Descriptor> createResult = await _userFileService.CreateFile(contract.File.GetName(),
                                                                                 contract.File.GetWeight(),
-                                                                                contract.File.OpenReadStream(),
+                                                                                contract.File.GetData(),
                                                                                 contract.Lifetime,
                                                                                 contract.Root,
                                                                                 contract.Download);
