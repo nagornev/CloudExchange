@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  descriptor_db:
+    container_name: descriptor_db
+    image: mysql:latest
+    restart: always
+    environment:
+        MYSQL_DATABASE: db
+        MYSQL_USER: user
+        MYSQL_PASSWORD: changeme
+        MYSQL_ROOT_PASSWORD: qwerty
+    volumes:
+        - ./CloudExchange.Data/DescriptorDb:/var/lib/mysql
+    ports:
+        - 3306:3306
+    networks:
+        - application
+        
+  hangfire_db:
+    container_name: hangfire_db
+    image: mcr.microsoft.com/mssql/server:latest
+    restart: always
+    volumes:
+        - ./CloudExchange.Data/HangfireDb:/var/opt/mssql/data
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "HHHHhhhh1111"
+    networks:
+      - application
+      
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+        - 5000:8080
+    networks:
+        - application
+    
+networks:
+  application:
+    driver: bridge

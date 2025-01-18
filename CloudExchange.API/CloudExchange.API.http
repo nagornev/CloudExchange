@@ -1,0 +1,6 @@
+@CloudExchange.API_HostAddress = http://localhost:5069
+
+GET {{CloudExchange.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
