@@ -1,26 +1,6 @@
 version: "3.9"
 
 services:
-  cloudexchange_service:
-    container_name: cloudexchange_service
-    restart: always
-    build: 
-      context: .
-      dockerfile: .\CloudExchange.API\Dockerfile
-    ports:
-      - 7000:8080
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-    depends_on:
-      - descriptor_db
-      - hangfire_db
-    networks:
-      - application
-  
   descriptor_db:
     container_name: descriptor_db
     image: mysql:latest
@@ -59,6 +39,27 @@ services:
         - 5000:8080
     networks:
         - application
+        
+  cloudexchange_service:
+    container_name: cloudexchange_service
+    restart: always
+    build: 
+      context: .
+      dockerfile: .\CloudExchange.API\Dockerfile
+    ports:
+      - 7000:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ./CloudExchange.Data/Files:/app/files
+    depends_on:
+      - descriptor_db
+      - hangfire_db
+    networks:
+      - application
     
 networks:
   application:

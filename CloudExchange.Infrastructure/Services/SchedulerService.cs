@@ -29,7 +29,8 @@ namespace CloudExchange.Infrastructure.Services
             Result<IEnumerable<Descriptor>> descriptorsResult = await _serverFileService.GetDescriptors(_timeProvider.NowUnix() + interval);
 
             if (descriptorsResult.Success)
-                _ = descriptorsResult.Content.Select(ScheduleDelete);
+                foreach (Descriptor descriptor in descriptorsResult.Content)
+                    _ = ScheduleDelete(descriptor);
 
             return Result.Successful();
         }

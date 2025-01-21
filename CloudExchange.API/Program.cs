@@ -1,4 +1,6 @@
 using CloudExchange.API.Extensions.Startup;
+using Hangfire;
+using Hangfire.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -30,6 +32,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions()
+{
+    Authorization = Enumerable.Empty<IDashboardAuthorizationFilter>()
+});
 app.MapControllers();
 
 app.Run();

@@ -7,9 +7,9 @@ namespace CloudExchange.Infrastructure.Providers
 {
     public class PathProvider : IPathProvider
     {
-        private const string _base = "E:\\Projects\\02_WEB\\CloudExchange\\";
+        private const string _base = "/app/";
 
-        private const string _directory = "CloudExchange.Data\\Files\\";
+        private const string _directory = "files/";
 
         public string GetBase()
         {
