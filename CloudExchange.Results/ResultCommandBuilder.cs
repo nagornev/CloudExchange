@@ -23,7 +23,7 @@ namespace CloudExchange.OperationResults
         }
 
         public ResultCommandBuilder AddCommand(ResultCommandDelegate command)
-        { 
+        {
             _commands.Add(command);
 
             return this;

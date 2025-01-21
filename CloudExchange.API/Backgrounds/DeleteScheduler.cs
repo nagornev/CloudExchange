@@ -18,7 +18,7 @@ namespace CloudExchange.API.Backgrounds
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                using(var scope =  _serviceProvider.CreateScope())
+                using (var scope = _serviceProvider.CreateScope())
                 {
                     ISchedulerService schedulerService = scope.ServiceProvider.GetRequiredService<ISchedulerService>();
 

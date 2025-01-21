@@ -3,10 +3,8 @@ using CloudExchange.OperationResults;
 using CloudExchange.UseCases.Providers;
 using CloudExchange.UseCases.Services;
 using Hangfire;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CloudExchange.Infrastructure.Services

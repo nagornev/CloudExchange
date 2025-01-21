@@ -50,10 +50,10 @@ namespace CloudExchange.Infrastructure.Repositories
         public async Task<Result> Delete(Descriptor decriptor)
         {
             try
-            { 
+            {
                 return await _storageRepository.Delete(decriptor);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return HandleException(exception);
             }

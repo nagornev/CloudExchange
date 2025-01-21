@@ -1,9 +1,9 @@
 ﻿using CloudExchange.Domain.Models;
+using CloudExchange.OperationResults;
+using CloudExchange.UseCases.Delegates;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CloudExchange.OperationResults;
-using CloudExchange.UseCases.Delegates;
 
 namespace CloudExchange.UseCases.Repositories
 {

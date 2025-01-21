@@ -6,7 +6,7 @@ namespace CloudExchange.Database.Contexts
 {
     public class DescriptorContext : DbContext
     {
-        public DescriptorContext(DbContextOptions<DescriptorContext> options):
+        public DescriptorContext(DbContextOptions<DescriptorContext> options) :
             base(options)
         {
         }

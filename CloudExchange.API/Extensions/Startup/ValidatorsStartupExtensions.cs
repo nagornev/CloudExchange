@@ -1,5 +1,4 @@
-﻿using CloudExchange.API.Contracts;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 
 namespace CloudExchange.API.Extensions.Startup

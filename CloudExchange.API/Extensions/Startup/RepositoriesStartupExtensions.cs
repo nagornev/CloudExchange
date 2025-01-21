@@ -1,6 +1,5 @@
 ﻿using CloudExchange.Infrastructure.Repositories;
 using CloudExchange.UseCases.Repositories;
-using Microsoft.AspNetCore.Identity;
 
 namespace CloudExchange.API.Extensions.Startup
 {

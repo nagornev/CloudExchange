@@ -7,7 +7,7 @@ namespace CloudExchange.API.Extensions.Startup
         public static IServiceCollection AddCors(this IServiceCollection services, IConfiguration configuration) =>
             services.AddCors(options => options.AddLocalhostPolicy());
 
-        private static void AddLocalhostPolicy(this CorsOptions options)=>
+        private static void AddLocalhostPolicy(this CorsOptions options) =>
             options.AddPolicy(options.DefaultPolicyName, policy =>
             {
                 policy.WithOrigins("http://localhost");

@@ -23,11 +23,11 @@ namespace CloudExchange.Infrastructure.Services
 
         public async Task<Result> ScheduleDelete(int interval)
         {
-            try 
+            try
             {
                 return await _schedulerService.ScheduleDelete(interval);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return HandleException(exception);
             }

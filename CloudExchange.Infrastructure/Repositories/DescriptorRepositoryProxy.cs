@@ -2,7 +2,6 @@
 using CloudExchange.OperationResults;
 using CloudExchange.UseCases.Delegates;
 using CloudExchange.UseCases.Repositories;
-using Google.Protobuf.Reflection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,7 @@ namespace CloudExchange.Infrastructure.Repositories
             }
             catch (Exception exception)
             {
-                return HandleException<IEnumerable<Descriptor>>(exception); 
+                return HandleException<IEnumerable<Descriptor>>(exception);
             }
         }
 
@@ -42,7 +41,7 @@ namespace CloudExchange.Infrastructure.Repositories
             {
                 return await _descriptorRepository.Get(descriptorId);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return HandleException<Descriptor>(exception);
             }

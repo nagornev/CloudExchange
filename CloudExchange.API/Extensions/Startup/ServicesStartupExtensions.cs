@@ -1,6 +1,5 @@
 ﻿using CloudExchange.Infrastructure.Services;
 using CloudExchange.UseCases.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudExchange.API.Extensions.Startup
 {

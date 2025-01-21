@@ -3,7 +3,6 @@ using CloudExchange.API.Extensions;
 using CloudExchange.Domain.Models;
 using CloudExchange.OperationResults;
 using CloudExchange.UseCases.Services;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using File = CloudExchange.Domain.Models.File;

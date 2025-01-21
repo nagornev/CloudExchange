@@ -9,7 +9,7 @@ namespace CloudExchange.API.Extensions.Startup
             services.AddControllers()
                     .ConfigureInvalidResposeFactory();
 
-        private static IMvcBuilder ConfigureInvalidResposeFactory(this IMvcBuilder builder)=>
+        private static IMvcBuilder ConfigureInvalidResposeFactory(this IMvcBuilder builder) =>
             builder.ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = (context) =>

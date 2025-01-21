@@ -1,6 +1,4 @@
-﻿using Org.BouncyCastle.Pkcs;
-
-namespace CloudExchange.Database.Entities
+﻿namespace CloudExchange.Database.Entities
 {
     public class DescriptorEntity
     {

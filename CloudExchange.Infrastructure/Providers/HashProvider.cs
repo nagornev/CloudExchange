@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CloudExchange.Infrastructure.Providers
 {
-    public class HashProvider: IHashProvider
+    public class HashProvider : IHashProvider
     {
         private readonly HashProviderOptions _options;
 
