@@ -42,7 +42,7 @@ namespace CloudExchange.Infrastructure.Services
 
         public async Task Delete(Descriptor descriptor)
         {
-            await _serverFileService.DeleteFile(descriptor.Id);
+            _ = await _serverFileService.DeleteFile(descriptor.Id);
         }
 
         private TimeSpan GetDelay(Descriptor descriptor)

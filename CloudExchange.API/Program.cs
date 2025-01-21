@@ -1,7 +1,4 @@
-using CloudExchange.API.Backgrounds;
 using CloudExchange.API.Extensions.Startup;
-using Hangfire;
-using Org.BouncyCastle.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -33,7 +30,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors();
-app.UseHangfireDashboard("/hangfire");
 app.MapControllers();
 
 app.Run();

@@ -144,10 +144,5 @@ namespace CloudExchange.Domain.Models
                                !string.IsNullOrEmpty(root) ? hashFactory.Invoke(root) : null,
                                !string.IsNullOrEmpty(download) ? hashFactory.Invoke(download) : null);
         }
-
-        public override bool Equals(object obj)
-        {
-            return ((Descriptor)obj).Id == Id;
-        }
     }
 }
