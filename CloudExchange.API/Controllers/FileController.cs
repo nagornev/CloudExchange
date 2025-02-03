@@ -41,9 +41,7 @@ namespace CloudExchange.API.Controllers
             Result<File> fileResult = await _userFileService.GetFile(descriptorId, download);
 
             return fileResult.Success ?
-                        File(fileResult.Content.Data,
-                             MediaTypeNames.Application.Octet,
-                             fileResult.Content.Descriptor.Name) :
+                        File(fileResult.Content) :
                         BadRequest(fileResult);
         }
 
@@ -70,6 +68,14 @@ namespace CloudExchange.API.Controllers
             return deleteResult.Success ?
                         Results.Ok(deleteResult) :
                         Results.BadRequest(deleteResult);
+        }
+
+
+        private FileStreamResult File(File file)
+        {
+            return File(file.Data,
+                        MediaTypeNames.Application.Octet,
+                        file.Descriptor.Name);
         }
     }
 }

@@ -32,10 +32,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors();
-app.UseHangfireDashboard("/hangfire", new DashboardOptions()
-{
-    Authorization = Enumerable.Empty<IDashboardAuthorizationFilter>()
-});
 app.MapControllers();
 
 app.Run();
