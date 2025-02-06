@@ -1,6 +1,4 @@
 using CloudExchange.API.Extensions.Startup;
-using Hangfire;
-using Hangfire.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
