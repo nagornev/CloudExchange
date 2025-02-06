@@ -61,7 +61,7 @@ namespace CloudExchange.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IResult> Delete([FromForm] DeleteContract contract)
+        public async Task<IResult> Delete([FromBody] DeleteContract contract)
         {
             Result deleteResult = await _userFileService.DeleteFile(contract.DescriptorId, contract.Root);
 

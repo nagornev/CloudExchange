@@ -1,0 +1,17 @@
+.close-button{
+    cursor: pointer;
+    width: 2vw;
+    height: 2vh;
+    font-size: 2vh;
+    border: 5px;
+    color: rgb(150, 150, 150);
+    background-color: white;
+    min-width: 30px;
+    min-height: 30px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.close-button:hover{
+    background-color: red;
+    color: white;
+}

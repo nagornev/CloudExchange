@@ -1,0 +1,71 @@
+.upload-modal-form{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 1vh;
+    margin-top: 1vh;
+}
+
+.upload-modal-form-workspace{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.upload-modal-response{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    height: 100%;
+    width: 100%;
+}
+
+.upload-modal-response-workspace{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.upload-modal-response-workspace p, a{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 1.7vh;
+}
+
+.upload-modal-response-true{
+    color:green;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 3vh;
+}
+
+.upload-modal-response-false{
+    color:red;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 3vh;
+}
+
+.copy {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+    width: 1.7vw;
+    height: 1.7vh;
+    min-height: 20px;
+    min-width: 20px;
+  }
+
+  .copy:hover {
+    color: #333;
+  }
+
+  .copy:focus {
+    outline: none;
+  }

@@ -10,8 +10,8 @@ namespace CloudExchange.API.Extensions.Startup
         private static void AddLocalhostPolicy(this CorsOptions options) =>
             options.AddPolicy(options.DefaultPolicyName, policy =>
             {
-                policy.WithOrigins("http://localhost:5173")
-                      .WithHeaders("Content-Disposition")
+                policy.WithOrigins("http://localhost:7001", "http://localhost:3000")
+                      .WithHeaders("Content-Disposition", "Content-Type")
                       .WithMethods("GET", "POST", "DELETE")
                       .WithExposedHeaders("Content-Disposition")
                       .AllowCredentials();

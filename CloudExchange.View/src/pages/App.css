@@ -1,0 +1,30 @@
+.welcome {
+    margin: 10vh auto;
+}
+
+.welcome h1 {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 6vh;
+    color: #6847F9;
+    background: linear-gradient(90deg,
+            #6847F9 0%,
+            #fff 40%,
+            #6847F9 60%,
+            #6847F9 100%);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 0.5s linear 1 forwards;
+}
+
+@keyframes shine {
+    from {
+        background-position: 70% 0;
+    }
+
+    to {
+        background-position: -90% 0;
+    }
+}
