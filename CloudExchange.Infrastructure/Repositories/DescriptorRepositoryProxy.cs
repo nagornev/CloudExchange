@@ -47,7 +47,7 @@ namespace CloudExchange.Infrastructure.Repositories
             }
         }
 
-        public async Task<Result<IEnumerable<Descriptor>>> Get(long deathTime)
+        public async Task<Result<IAsyncEnumerable<Descriptor>>> Get(long deathTime)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace CloudExchange.Infrastructure.Repositories
             }
             catch (Exception exception)
             {
-                return HandleException<IEnumerable<Descriptor>>(exception);
+                return HandleException<IAsyncEnumerable<Descriptor>>(exception);
             }
         }
 

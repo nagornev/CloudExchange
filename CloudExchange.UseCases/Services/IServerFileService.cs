@@ -19,7 +19,7 @@ namespace CloudExchange.UseCases.Services
         /// </summary>
         /// <param name="deathTime"></param>
         /// <returns></returns>
-        Task<Result<IEnumerable<Descriptor>>> GetDescriptors(long deathTime);
+        Task<Result<IAsyncEnumerable<Descriptor>>> GetDescriptors(long deathTime);
 
         /// <summary>
         /// Return file descriptor.

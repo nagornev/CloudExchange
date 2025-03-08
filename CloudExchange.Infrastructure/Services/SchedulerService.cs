@@ -24,10 +24,10 @@ namespace CloudExchange.Infrastructure.Services
 
         public async Task<Result> ScheduleDelete(int interval)
         {
-            Result<IEnumerable<Descriptor>> descriptorsResult = await _serverFileService.GetDescriptors(_timeProvider.NowUnix() + interval);
+            Result<IAsyncEnumerable<Descriptor>> descriptorsResult = await _serverFileService.GetDescriptors(_timeProvider.NowUnix() + interval);
 
             if (descriptorsResult.Success)
-                foreach (Descriptor descriptor in descriptorsResult.Content)
+                await foreach (Descriptor descriptor in descriptorsResult.Content)
                     _ = ScheduleDelete(descriptor);
 
             return Result.Successful();

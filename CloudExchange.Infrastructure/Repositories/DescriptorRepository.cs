@@ -42,13 +42,13 @@ namespace CloudExchange.Infrastructure.Repositories
                         Result<Descriptor>.Failure(error => error.NullOrEmpty($"The file {descriptorId} was not found."));
         }
 
-        public async Task<Result<IEnumerable<Descriptor>>> Get(long deathTime)
+        public Task<Result<IAsyncEnumerable<Descriptor>>> Get(long deathTime)
         {
-            DescriptorEntity[] descriptorEntities = await _context.Descriptors.AsNoTracking()
-                                                                              .Where(x => (x.Uploaded + x.Lifetime) < deathTime)
-                                                                              .ToArrayAsync();
+            IAsyncEnumerable<DescriptorEntity> descriptorEntities = _context.Descriptors.AsNoTracking()
+                                                                                        .Where(x => (x.Uploaded + x.Lifetime) < deathTime)
+                                                                                        .AsAsyncEnumerable();
 
-            return descriptorEntities.GetDomain();
+            return Task.FromResult(descriptorEntities.GetDomain());
         }
 
         public async Task<Result> Create(Descriptor descriptor, TransactionCreateDelegate callback)

@@ -27,7 +27,7 @@ namespace CloudExchange.UseCases.Repositories
         /// </summary>
         /// <param name="deathTime"></param>
         /// <returns></returns>
-        Task<Result<IEnumerable<Descriptor>>> Get(long deathTime);
+        Task<Result<IAsyncEnumerable<Descriptor>>> Get(long deathTime);
 
         /// <summary>
         /// Creates a new descriptor in the database.

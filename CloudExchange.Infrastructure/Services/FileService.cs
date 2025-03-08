@@ -44,7 +44,7 @@ namespace CloudExchange.Infrastructure.Services
             return await _desciptorRepository.Get();
         }
 
-        public async Task<Result<IEnumerable<Descriptor>>> GetDescriptors(long deathTime)
+        public async Task<Result<IAsyncEnumerable<Descriptor>>> GetDescriptors(long deathTime)
         {
             return await _desciptorRepository.Get(deathTime);
         }
