@@ -13,7 +13,7 @@ namespace CloudExchange.HangfireScheduler.Services
         private readonly ITimeProvider _timeProvider;
 
         public SchedulerService(IServerFileService serverFileService,
-                                        ITimeProvider timeProvider)
+                                ITimeProvider timeProvider)
         {
             _serverFileService = serverFileService;
             _timeProvider = timeProvider;
@@ -21,13 +21,13 @@ namespace CloudExchange.HangfireScheduler.Services
 
         public async Task<Result> ScheduleDelete(int interval)
         {
-            Result<IAsyncEnumerable<DescriptorEntity>> descriptorsResult = await _serverFileService.GetDescriptors(_timeProvider.NowUnix() + interval);
+            Result<IAsyncEnumerable<DescriptorEntity>> descriptorsResult = await _serverFileService.GetDescriptorsAsync(_timeProvider.NowUnix() + interval);
 
-            if (descriptorsResult.Success)
+            if (descriptorsResult.IsSuccess)
                 await foreach (DescriptorEntity descriptor in descriptorsResult.Content)
                     _ = ScheduleDelete(descriptor);
 
-            return Result.Successful();
+            return Result.Success();
         }
 
         public string ScheduleDelete(DescriptorEntity descriptor)
@@ -38,7 +38,7 @@ namespace CloudExchange.HangfireScheduler.Services
 
         public async Task Delete(DescriptorEntity descriptor)
         {
-            _ = await _serverFileService.DeleteFile(descriptor.Id);
+            _ = await _serverFileService.DeleteFileAsync(descriptor.Id);
         }
 
         private TimeSpan GetDelay(DescriptorEntity descriptor)

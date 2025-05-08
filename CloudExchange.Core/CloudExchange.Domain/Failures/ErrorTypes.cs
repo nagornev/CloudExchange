@@ -1,0 +1,22 @@
+﻿
+namespace CloudExchange.Domain.Failures
+{
+    public class ErrorTypes
+    {
+        public const int NullOrEmpty = 0;
+
+        public const int InvalidArgument = 1;
+
+        public const int NotFound = 2;
+
+        public const int Interrupted = 3;
+
+        public const int InvalidOperation = 4;
+
+        public const int TransactionFailed = 5;
+
+        public const int InvalidDownload = 6;
+
+        public const int InvalidRoot = 7;
+    }
+}

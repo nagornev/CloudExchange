@@ -1,4 +1,5 @@
-﻿using CloudExchange.OperationResults;
+﻿using CloudExchange.Domain.Failures;
+using CloudExchange.OperationResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudExchange.API.Extensions.Startup
@@ -21,7 +22,7 @@ namespace CloudExchange.API.Extensions.Startup
                                        .Errors.First()
                                        .ErrorMessage;
 
-                    return new BadRequestObjectResult(Result.Failure(error => error.InvalidArgument(message, field)));
+                    return new BadRequestObjectResult(Result.Failure(Errors.InvalidArgument(message)));
                 };
             });
     }

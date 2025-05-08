@@ -8,10 +8,10 @@ namespace CloudExchange.OperationResults
     public class Result<T> : Result
     {
         [JsonConstructor]
-        protected Result(bool success,
+        protected Result(bool isSuccess,
                          T content = default,
-                         IError error = default)
-            : base(success, error)
+                         Error error = default)
+            : base(isSuccess, error)
         {
             Content = content;
         }
@@ -20,48 +20,16 @@ namespace CloudExchange.OperationResults
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault | JsonIgnoreCondition.WhenWritingNull)]
         public T Content { get; private set; }
 
-        private static Result<T> Constructor(bool success,
-                                             T content = default,
-                                             IError error = default)
+        public static Result<T> Success(T content)
         {
-            return new Result<T>(success, content, error);
+            return new Result<T>(isSuccess: true,
+                                 content: content);
         }
 
-        public static Result<T> Successful(T content)
+        public new static Result<T> Failure(Error error)
         {
-            return Constructor(success: true,
-                               content: content);
-        }
-
-        public new static Result<T> Failure()
-        {
-            return Constructor(success: false);
-        }
-
-        public new static Result<T> Failure(IError error)
-        {
-            return Constructor(success: false,
-                               error: error);
-        }
-
-        public static Result<T> Failure(Result result)
-        {
-            return Constructor(success: false,
-                               error: result.Error);
-        }
-
-        public new static Result<T> Failure(Action<ErrorBuilder> options)
-        {
-            ErrorBuilder builder = new ErrorBuilder();
-
-            options.Invoke(builder);
-
-            return Failure(builder.Build());
-        }
-
-        public static Result<T> Deserialize(string content)
-        {
-            return JsonSerializer.Deserialize<Result<T>>(content);
+            return new Result<T>(isSuccess: false,
+                                 error: error);
         }
 
         #region Overrides

@@ -1,5 +1,7 @@
 ﻿using CloudExchange.Domain.Abstractions.Repositories;
 using CloudExchange.Domain.Entities;
+using CloudExchange.Domain.Failures;
+using CloudExchange.OperationResults;
 
 namespace CloudExchange.FileSystemPersistence.Repositories
 {
@@ -7,11 +9,13 @@ namespace CloudExchange.FileSystemPersistence.Repositories
     {
         private const int _buffer = 4096;
 
-        public Task<Stream> Get(DescriptorEntity descriptor)
+        public async Task<Result<Stream>> GetAsync(DescriptorEntity descriptor, CancellationToken cancellation)
         {
-            if (!Directory.Exists(descriptor.Path) || 
-                !File.Exists($"{descriptor.Path}{descriptor.Id}"))
-                return default;
+            if(!Directory.Exists(descriptor.Path))
+                return Result<Stream>.Failure(Errors.NotFound($"The directory ({descriptor.Path}) does not exist."));
+
+            if (!File.Exists($"{descriptor.Path}{descriptor.Id}"))
+                return Result<Stream>.Failure(Errors.InvalidArgument($"The file ({descriptor.Id}) does not exist."));
 
             Stream stream = new FileStream(descriptor.Path,
                                            FileMode.Open,
@@ -20,13 +24,13 @@ namespace CloudExchange.FileSystemPersistence.Repositories
                                            _buffer,
                                            useAsync: true);
 
-            return Task.FromResult(stream);
+            return Result<Stream>.Success(stream);
         }
 
-        public async Task<bool> Create(DescriptorEntity descriptor, Stream stream)
+        public async Task<Result> CreateAsync(DescriptorEntity descriptor, Stream stream, CancellationToken cancellation)
         {
             if (!Directory.Exists(descriptor.Path))
-                return false;
+                return Result.Failure(Errors.NotFound($"The directory ({descriptor.Path}) does not exist."));
 
             using (FileStream file = new FileStream(descriptor.Path,
                                                     FileMode.Create,
@@ -35,21 +39,24 @@ namespace CloudExchange.FileSystemPersistence.Repositories
                                                     _buffer,
                                                     useAsync: true))
             {
-                await stream.CopyToAsync(file);
+                await stream.CopyToAsync(file, cancellation);
             }
 
-            return true;
+            return Result.Success();
         }
 
-        public async Task<bool> Delete(DescriptorEntity descriptor)
+        public async Task<Result> DeleteAsync(DescriptorEntity descriptor, CancellationToken cancellation)
         {
-            if (!Directory.Exists(descriptor.Path) ||
-                !File.Exists($"{descriptor.Path}{descriptor.Id}"))
-                return false;
+            if (!Directory.Exists(descriptor.Path))
+                return Result<Stream>.Failure(Errors.NotFound($"The directory ({descriptor.Path}) does not exist."));
 
-            await Task.WhenAll(Task.Run(() => File.Delete($"{descriptor.Path}{descriptor.Id}")));
+            if (!File.Exists($"{descriptor.Path}{descriptor.Id}"))
+                return Result<Stream>.Failure(Errors.InvalidArgument($"The file ({descriptor.Id}) does not exist."));
 
-            return true;
+            await Task.WhenAll(Task.Run(() => File.Delete($"{descriptor.Path}{descriptor.Id}"), 
+                               cancellation));
+
+            return Result.Success();
         }
     }
 }

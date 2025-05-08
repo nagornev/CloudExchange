@@ -25,47 +25,56 @@ namespace CloudExchange.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IResult> Get()
+        public async Task<IResult> Get(CancellationToken cancellation = default)
         {
-            Result<IEnumerable<DescriptorEntity>> descriptorsResult = await _serverFileService.GetDescriptors();
+            Result<IEnumerable<DescriptorEntity>> descriptorsResult = await _serverFileService.GetDescriptorsAsync(cancellation);
 
-            return descriptorsResult.Success ?
+            return descriptorsResult.IsSuccess ?
                         Results.Ok(descriptorsResult) :
                         Results.BadRequest(descriptorsResult);
         }
 
         [HttpGet]
         [Route("{descriptorId}")]
-        public async Task<IActionResult> Get(Guid descriptorId, string? download = null)
+        public async Task<IActionResult> Get(Guid descriptorId,
+                                             string? download = null,
+                                             CancellationToken cancellation = default)
         {
-            Result<FileDto> fileDtoResult = await _userFileService.GetFile(descriptorId, download);
+            Result<FileDto> fileDtoResult = await _userFileService.GetFileAsync(descriptorId,
+                                                                                download,
+                                                                                cancellation);
 
-            return fileDtoResult.Success ?
+            return fileDtoResult.IsSuccess ?
                         File(fileDtoResult.Content) :
                         BadRequest(fileDtoResult);
         }
 
         [HttpPost]
-        public async Task<IResult> Create([FromForm] CreateContract contract)
+        public async Task<IResult> Create([FromForm] CreateContract contract,
+                                          CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> createResult = await _userFileService.CreateFile(contract.File.GetName(),
-                                                                                      contract.File.GetWeight(),
-                                                                                      contract.File.GetData(),
-                                                                                      contract.Lifetime,
-                                                                                      contract.Root,
-                                                                                      contract.Download);
+            Result<DescriptorEntity> createResult = await _userFileService.CreateFileAsync(contract.File.GetName(),
+                                                                                           contract.File.GetWeight(),
+                                                                                           contract.File.GetData(),
+                                                                                           contract.Lifetime,
+                                                                                           contract.Root,
+                                                                                           contract.Download,
+                                                                                           cancellation);
 
-            return createResult.Success ?
+            return createResult.IsSuccess ?
                         Results.Ok(createResult) :
                         Results.BadRequest(createResult);
         }
 
         [HttpDelete]
-        public async Task<IResult> Delete([FromBody] DeleteContract contract)
+        public async Task<IResult> Delete([FromBody] DeleteContract contract,
+                                          CancellationToken cancellation = default)
         {
-            Result deleteResult = await _userFileService.DeleteFile(contract.DescriptorId, contract.Root);
+            Result deleteResult = await _userFileService.DeleteFileAsync(contract.DescriptorId,
+                                                                         contract.Root,
+                                                                         cancellation);
 
-            return deleteResult.Success ?
+            return deleteResult.IsSuccess ?
                         Results.Ok(deleteResult) :
                         Results.BadRequest(deleteResult);
         }

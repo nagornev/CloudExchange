@@ -5,6 +5,7 @@ using CloudExchange.Domain.Abstractions.Providers;
 using CloudExchange.Domain.Abstractions.Repositories;
 using CloudExchange.Domain.Dto;
 using CloudExchange.Domain.Entities;
+using CloudExchange.Domain.Failures;
 using CloudExchange.OperationResults;
 
 namespace CloudExchange.Application.Services
@@ -36,62 +37,66 @@ namespace CloudExchange.Application.Services
 
         #region ServerFileService
 
-        public async Task<Result<IEnumerable<DescriptorEntity>>> GetDescriptors()
+        public async Task<Result<IEnumerable<DescriptorEntity>>> GetDescriptorsAsync(CancellationToken cancellation = default)
         {
-            IEnumerable<DescriptorEntity> descriptors = await _desciptorRepository.Get();
-
-            return Result<IEnumerable<DescriptorEntity>>.Successful(descriptors);
+            return await _desciptorRepository.GetAsync(cancellation);
         }
 
-        public async Task<Result<IAsyncEnumerable<DescriptorEntity>>> GetDescriptors(long deathTime)
+        public async Task<Result<IAsyncEnumerable<DescriptorEntity>>> GetDescriptorsAsync(long deathTime,
+                                                                                          CancellationToken cancellation = default)
         {
-            IAsyncEnumerable<DescriptorEntity> descriptors = await _desciptorRepository.Get(deathTime);
-
-            return Result<IAsyncEnumerable<DescriptorEntity>>.Successful(descriptors);
+            return await _desciptorRepository.GetAsync(deathTime, cancellation);
         }
 
-        public async Task<Result<DescriptorEntity>> GetDescriptor(Guid descriptorId)
+        public async Task<Result<DescriptorEntity>> GetDescriptorAsync(Guid descriptorId,
+                                                                       CancellationToken cancellation = default)
         {
-            DescriptorEntity? descriptor = await _desciptorRepository.Get(descriptorId);
-
-            return descriptor != null ?
-                    Result<DescriptorEntity>.Successful(descriptor) :
-                    Result<DescriptorEntity>.Failure(builder => builder.NullOrEmpty($"The file {descriptorId} was not found."));
+            return await _desciptorRepository.GetAsync(descriptorId, cancellation);
         }
 
-        public async Task<Result<FileDto>> GetFile(Guid descriptorId)
+        public async Task<Result<FileDto>> GetFileAsync(Guid descriptorId,
+                                                        CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> descriptorResult = await GetDescriptor(descriptorId);
+            Result<DescriptorEntity> descriptorResult = await GetDescriptorAsync(descriptorId, cancellation);
 
-            return descriptorResult.Success ?
+            return descriptorResult.IsSuccess ?
                         await GetFile(descriptorResult.Content) :
-                        Result<FileDto>.Failure(descriptorResult);
+                        Result<FileDto>.Failure(descriptorResult.Error);
         }
 
-        public async Task<Result> DeleteFile(Guid descriptorId)
+        public async Task<Result> DeleteFileAsync(Guid descriptorId,
+                                                  CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> descriptorResult = await GetDescriptor(descriptorId);
+            Result<DescriptorEntity> descriptorResult = await GetDescriptorAsync(descriptorId, cancellation);
 
-            return descriptorResult.Success ?
+            return descriptorResult.IsSuccess ?
                         await DeleteFile(descriptorResult.Content) :
-                        Result.Failure(descriptorResult);
+                        Result.Failure(descriptorResult.Error);
         }
 
         #endregion
 
         #region UserFileService
 
-        public async Task<Result<FileDto>> GetFile(Guid descriptorId, string? download = null)
+        public async Task<Result<FileDto>> GetFileAsync(Guid descriptorId,
+                                                        string? download = null,
+                                                        CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> descriptorResult = await IsDownloadAllowed(descriptorId, download);
+            Result<DescriptorEntity> descriptorResult = await IsDownloadAllowed(descriptorId, download, cancellation);
 
-            return descriptorResult.Success ?
+            return descriptorResult.IsSuccess ?
                         await GetFile(descriptorResult.Content) :
-                        Result<FileDto>.Failure(descriptorResult);
+                        Result<FileDto>.Failure(descriptorResult.Error);
 
         }
 
-        public async Task<Result<DescriptorEntity>> CreateFile(string name, int weight, Stream data, int lifetime, string? root = null, string? download = null)
+        public async Task<Result<DescriptorEntity>> CreateFileAsync(string name,
+                                                                    int weight,
+                                                                    Stream data,
+                                                                    int lifetime,
+                                                                    string? root = null,
+                                                                    string? download = null,
+                                                                    CancellationToken cancellation = default)
         {
             Result<DescriptorEntity> descriptorResult = DescriptorEntity.New(name,
                                                                              _pathProvider.GetPath(),
@@ -102,77 +107,89 @@ namespace CloudExchange.Application.Services
                                                                              download,
                                                                              _descriptorCredentialsHashProvider);
 
-            return descriptorResult.Success ?
-                        await CreateFile(descriptorResult.Content, data) :
-                        Result<DescriptorEntity>.Failure(descriptorResult);
+            return descriptorResult.IsSuccess ?
+                        await CreateFile(descriptorResult.Content, data, cancellation) :
+                        descriptorResult;
         }
 
-        public async Task<Result> DeleteFile(Guid descriptorId, string root)
+        public async Task<Result> DeleteFileAsync(Guid descriptorId,
+                                                  string root,
+                                                  CancellationToken cancellation = default)
         {
             Result<DescriptorEntity> descriptorResult = await IsRootAllowed(descriptorId, root);
 
-            return descriptorResult.Success ?
-                        await DeleteFile(descriptorResult.Content) :
-                        Result.Failure(descriptorResult);
+            return descriptorResult.IsSuccess ?
+                        await DeleteFile(descriptorResult.Content, cancellation) :
+                        descriptorResult;
         }
 
         #endregion
 
         #region Private methods
 
-        private async Task<Result<FileDto>> GetFile(DescriptorEntity descriptor)
+        private async Task<Result<FileDto>> GetFile(DescriptorEntity descriptor,
+                                                    CancellationToken cancellation = default)
         {
-            Stream? stream = await _dataRepository.Get(descriptor);
+            Result<Stream> dataResult = await _dataRepository.GetAsync(descriptor, cancellation);
 
-            return stream != null ?
-                    FileDto.Constructor(descriptor, stream) :
-                    Result<FileDto>.Failure(builder => builder.NullOrEmpty($"The file {descriptor.Id} was not found."));
+            return dataResult.IsSuccess ?
+                    FileDto.Create(descriptor, dataResult.Content) :
+                    Result<FileDto>.Failure(dataResult.Error);
         }
 
-        private async Task<Result<DescriptorEntity>> CreateFile(DescriptorEntity descriptor, Stream data)
+        private async Task<Result<DescriptorEntity>> CreateFile(DescriptorEntity descriptor,
+                                                                Stream data,
+                                                                CancellationToken cancellation = default)
         {
-            bool success = await _desciptorRepository.Create(descriptor,
-                                                             async (descriptor) => await _dataRepository.Create(descriptor, data));
+            Result createResult = await _desciptorRepository.CreateAsync(descriptor,
+                                                                         async (descriptor, cancellation) => await _dataRepository.CreateAsync(descriptor, data, cancellation),
+                                                                         cancellation);
 
-            return success ?
-                        Result<DescriptorEntity>.Successful(descriptor) :
-                        Result<DescriptorEntity>.Failure(builder => builder.Operation($"The file {descriptor.Name} was not created."));
+            return createResult.IsSuccess ?
+                        Result<DescriptorEntity>.Success(descriptor) :
+                        Result<DescriptorEntity>.Failure(createResult.Error);
         }
 
-        private async Task<Result> DeleteFile(DescriptorEntity descriptor)
+        private async Task<Result> DeleteFile(DescriptorEntity descriptor,
+                                              CancellationToken cancellation = default)
         {
-            bool success = await _desciptorRepository.Delete(descriptor,
-                                                             async (descriptor) => await _dataRepository.Delete(descriptor));
+            Result deleteResult = await _desciptorRepository.DeleteAsync(descriptor,
+                                                             async (descriptor, cancellation) => await _dataRepository.DeleteAsync(descriptor, cancellation),
+                                                             cancellation);
 
-            return success ?
-                      Result.Successful() :
-                      Result.Failure(builder => builder.Operation($"The file {descriptor.Id} was not deleted."));
+            return deleteResult.IsSuccess ?
+                      Result.Success() :
+                      Result.Failure(deleteResult.Error);
         }
 
-        private async Task<Result<DescriptorEntity>> IsRootAllowed(Guid descriptorId, string root)
+        private async Task<Result<DescriptorEntity>> IsRootAllowed(Guid descriptorId,
+                                                                   string root,
+                                                                   CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> descriptorResult = await GetDescriptor(descriptorId);
+            Result<DescriptorEntity> descriptorResult = await GetDescriptorAsync(descriptorId, cancellation);
 
-            if (descriptorResult.Success &&
+            if (descriptorResult.IsSuccess &&
                 descriptorResult.Content.Credentials.Root != null)
                 return _descriptorCredentialsHashProvider.Verify(root, descriptorResult.Content.Credentials.Root) ?
                             descriptorResult :
-                            Result<DescriptorEntity>.Failure(error => error.InvalidArgument("Invalid root password."));
+                            Result<DescriptorEntity>.Failure(Errors.InvalidRoot("Invalid root password."));
 
-            return !descriptorResult.Success ?
-                        Result<DescriptorEntity>.Failure(descriptorResult) :
-                        Result<DescriptorEntity>.Failure(error => error.NullOrEmpty("This file does`t have a root password."));
+            return descriptorResult.IsFailure?
+                    descriptorResult:
+                    Result<DescriptorEntity>.Failure(Errors.InvalidRoot("This file does`t have a root password."));
         }
 
-        private async Task<Result<DescriptorEntity>> IsDownloadAllowed(Guid descriptorId, string? download)
+        private async Task<Result<DescriptorEntity>> IsDownloadAllowed(Guid descriptorId,
+                                                                       string? download,
+                                                                       CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> descriptorResult = await GetDescriptor(descriptorId);
+            Result<DescriptorEntity> descriptorResult = await GetDescriptorAsync(descriptorId, cancellation);
 
-            if (descriptorResult.Success &&
+            if (descriptorResult.IsSuccess &&
                 descriptorResult.Content.Credentials.Download != null)
                 return _descriptorCredentialsHashProvider.Verify(download, descriptorResult.Content.Credentials.Download) ?
                             descriptorResult :
-                            Result<DescriptorEntity>.Failure(error => error.InvalidArgument("Invalid download password."));
+                            Result<DescriptorEntity>.Failure(Errors.InvalidDownload("Invalid download password."));
 
             return descriptorResult;
         }

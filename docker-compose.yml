@@ -40,39 +40,39 @@ services:
     networks:
         - application
         
-  cloudexchange_service:
-    container_name: cloudexchange_service
-    restart: always
-    build: 
-      context: .
-      dockerfile: .\CloudExchange.API\Dockerfile
-    ports:
-      - 7000:8080
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ./CloudExchange.Data/Files:/app/files
-    depends_on:
-      - descriptor_db
-      - hangfire_db
-    networks:
-      - application
+  # cloudexchange_service:
+  #   container_name: cloudexchange_service
+  #   restart: always
+  #   build: 
+  #     context: .
+  #     dockerfile: .\CloudExchange.Presenters\CloudExchange.API\Dockerfile
+  #   ports:
+  #     - 7000:8080
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_HTTP_PORTS=8080
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+  #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  #     - ./CloudExchange.Data/Files:/app/files
+  #   depends_on:
+  #     - descriptor_db
+  #     - hangfire_db
+  #   networks:
+  #     - application
   
-  cloudexchange_view:
-    container_name: cloudexchange_view
-    restart: always
-    build: 
-      context: .\CloudExchange.View
-      dockerfile: .\Dockerfile
-    ports:
-      - 7001:3000
-    depends_on:
-      - cloudexchange_service
-    networks:
-      - application
+  # cloudexchange_view:
+  #   container_name: cloudexchange_view
+  #   restart: always
+  #   build: 
+  #     context: .\CloudExchange.View
+  #     dockerfile: .\Dockerfile
+  #   ports:
+  #     - 7001:3000
+  #   depends_on:
+  #     - cloudexchange_service
+  #   networks:
+  #     - application
     
 networks:
   application:

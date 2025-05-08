@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.IsolatedStorage;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -7,56 +8,33 @@ namespace CloudExchange.OperationResults
     [Serializable]
     public class Result
     {
-        [JsonConstructor]
-        protected Result(bool success,
-                         IError error = default)
+        protected Result(bool isSuccess,
+                         Error error = default)
         {
-            Success = success;
+            IsSuccess = isSuccess;
             Error = error;
         }
 
         [JsonPropertyName("success")]
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        public bool Success { get; private set; }
+        public bool IsSuccess { get; }
 
         [JsonPropertyName("error")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault | JsonIgnoreCondition.WhenWritingNull)]
-        public IError Error { get; private set; }
+        public Error Error { get; }
 
-        private static Result Constructor(bool success, IError error = default)
+        [JsonIgnore]
+        public bool IsFailure => !IsSuccess;
+
+        public static Result Success()
         {
-            return new Result(success, error);
+            return new Result(isSuccess: true);
         }
 
-        public static Result Successful()
+        public static Result Failure(Error error)
         {
-            return Constructor(success: true);
-        }
-
-        public static Result Failure()
-        {
-            return Constructor(success: false);
-        }
-
-        public static Result Failure(IError error)
-        {
-            return Constructor(success: false,
-                               error: error);
-        }
-
-        public static Result Failure(Result result)
-        {
-            return Constructor(success: false,
-                               error: result.Error);
-        }
-
-        public static Result Failure(Action<ErrorBuilder> options)
-        {
-            ErrorBuilder builder = new ErrorBuilder();
-
-            options.Invoke(builder);
-
-            return Failure(error: builder.Build());
+            return new Result(isSuccess: false,
+                              error: error);
         }
 
         #region Overrides
@@ -64,11 +42,6 @@ namespace CloudExchange.OperationResults
         public override string ToString()
         {
             return JsonSerializer.Serialize(this);
-        }
-
-        public static implicit operator bool(Result result)
-        {
-            return result.Success;
         }
 
         #endregion

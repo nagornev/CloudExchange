@@ -1,6 +1,6 @@
 ﻿using CloudExchange.Domain.Abstractions.Providers;
+using CloudExchange.Domain.Failures;
 using CloudExchange.OperationResults;
-using System;
 
 namespace CloudExchange.Domain.ValueObjects
 {
@@ -33,29 +33,31 @@ namespace CloudExchange.Domain.ValueObjects
             Root = root;
         }
 
+        private DescriptorCredentialsValueObject() { }
+
         public string Download { get; private set; }
 
         public string Root { get; private set; }
 
-        public static Result<DescriptorCredentialsValueObject> Constructor(string download,
-                                                                           string root,
-                                                                           IDescriptorCredentialsHashProvider hashProvider)
+        public static Result<DescriptorCredentialsValueObject> Create(string download,
+                                                                      string root,
+                                                                      IDescriptorCredentialsHashProvider hashProvider)
         {
             if (!string.IsNullOrEmpty(root) &&
                 !string.IsNullOrWhiteSpace(root) &&
                 !(root.Length >= RootMinimumLenght && root.Length <= RootMaximumLenght))
-                return Result<DescriptorCredentialsValueObject>.Failure(error => error.InvalidArgument($"The root password can`t be less than {RootMinimumLenght} and more than {RootMaximumLenght} symbols."));
+                return Result<DescriptorCredentialsValueObject>.Failure(Errors.InvalidArgument($"The root password can`t be less than {RootMinimumLenght} and more than {RootMaximumLenght} symbols."));
 
             if (!string.IsNullOrEmpty(download) &&
                 !string.IsNullOrWhiteSpace(download) &&
                 !(download.Length >= DownloadMinimumLenght && download.Length <= DownloadMaximumLenght))
-                return Result<DescriptorCredentialsValueObject>.Failure(error => error.InvalidArgument($"The download password can`t be less than {DownloadMinimumLenght} and more than {DownloadMaximumLenght} symbols."));
+                return Result<DescriptorCredentialsValueObject>.Failure(Errors.InvalidArgument($"The download password can`t be less than {DownloadMinimumLenght} and more than {DownloadMaximumLenght} symbols."));
 
             if ((!string.IsNullOrEmpty(root) || !string.IsNullOrEmpty(download)) &&
                 hashProvider == null)
-                throw new ArgumentException("The hash provider can`t be null, if root or download password not null or empty.");
+                return Result<DescriptorCredentialsValueObject>.Failure(Errors.InvalidArgument("The hash provider can`t be null, if root or download password not null or empty."));
 
-            return Result<DescriptorCredentialsValueObject>.Successful(
+            return Result<DescriptorCredentialsValueObject>.Success(
                         new DescriptorCredentialsValueObject(!string.IsNullOrEmpty(download) ? hashProvider.Hash(download) : null,
                                                              !string.IsNullOrEmpty(root) ? hashProvider.Hash(root) : null));
         }

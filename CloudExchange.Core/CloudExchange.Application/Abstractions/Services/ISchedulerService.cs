@@ -7,7 +7,7 @@ namespace CloudExchange.Application.Abstractions.Services
         /// <summary>
         /// Schedules to delete files that will die at now+interval time.
         /// </summary>
-        /// <param name="deathTime">Unix time in seconds.</param>
+        /// <param name="interval">Unix time in seconds.</param>
         /// <returns></returns>
         Task<Result> ScheduleDelete(int interval);
     }

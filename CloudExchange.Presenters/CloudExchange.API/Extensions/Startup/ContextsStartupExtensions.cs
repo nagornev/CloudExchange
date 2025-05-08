@@ -7,8 +7,8 @@ namespace CloudExchange.API.Extensions.Startup
     public static class ContextsStartupExtensions
     {
         public static IServiceCollection AddContexts(this IServiceCollection services, IConfiguration configuration) =>
-            services.AddDescriptorContext(configuration)
-                    .AddHangfireContext(configuration);
+            services.AddDescriptorContext(configuration);
+                    //.AddHangfireContext(configuration);
 
 
         private static IServiceCollection AddDescriptorContext(this IServiceCollection services, IConfiguration configuration)=>

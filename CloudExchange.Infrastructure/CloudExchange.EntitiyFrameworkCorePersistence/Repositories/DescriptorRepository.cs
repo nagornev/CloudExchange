@@ -1,7 +1,9 @@
 ﻿using CloudExchange.Domain.Abstractions.Repositories;
 using CloudExchange.Domain.Delegates;
 using CloudExchange.Domain.Entities;
+using CloudExchange.Domain.Failures;
 using CloudExchange.EntitiyFrameworkCorePersistence.Contexts;
+using CloudExchange.OperationResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CloudExchange.EntitiyFrameworkCorePersistence.Repositories
@@ -15,69 +17,95 @@ namespace CloudExchange.EntitiyFrameworkCorePersistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<DescriptorEntity>> Get()
+        public async Task<Result<IEnumerable<DescriptorEntity>>> GetAsync(CancellationToken cancellation = default)
         {
-            return await _context.Descriptors.ToArrayAsync();
+            DescriptorEntity[] descriptors = await _context.Descriptors.ToArrayAsync(cancellation);
+
+            return Result<IEnumerable<DescriptorEntity>>.Success(descriptors);
         }
 
-        public async Task<DescriptorEntity?> Get(Guid descriptorId)
+        public async Task<Result<DescriptorEntity>> GetAsync(Guid descriptorId,
+                                                             CancellationToken cancellation = default)
         {
-            return await _context.Descriptors.FirstOrDefaultAsync(x => x.Id == descriptorId);
+            DescriptorEntity? descriptor = await _context.Descriptors.FirstOrDefaultAsync(x => x.Id == descriptorId,
+                                                                                          cancellation);
+
+
+            return descriptor != null ?
+                      Result<DescriptorEntity>.Success(descriptor) :
+                      Result<DescriptorEntity>.Failure(Errors.NotFound($"The descriptor {descriptorId} was not found."));
         }
 
-        public Task<IAsyncEnumerable<DescriptorEntity>> Get(long deathTime)
+        public Task<Result<IAsyncEnumerable<DescriptorEntity>>> GetAsync(long deathTime,
+                                                                         CancellationToken cancellation = default)
         {
-            return Task.FromResult(_context.Descriptors.Where(x => (x.Uploaded + x.Lifetime) < deathTime)
-                                                       .AsAsyncEnumerable());
+            IAsyncEnumerable<DescriptorEntity> descriptors = _context.Descriptors.Where(x => (x.Uploaded + x.Lifetime) < deathTime)
+                                                                                 .AsAsyncEnumerable();
+
+            return Task.FromResult(Result<IAsyncEnumerable<DescriptorEntity>>.Success(descriptors));
         }
 
-        public async Task<bool> Create(DescriptorEntity descriptor, TransactionCreateDelegate callback)
+        public async Task<Result> CreateAsync(DescriptorEntity descriptor,
+                                              TransactionCreateAsyncDelegate callback,
+                                              CancellationToken cancellation = default)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            using (var transaction = await _context.Database.BeginTransactionAsync(cancellation))
             {
+                _ = await _context.Descriptors.AddAsync(descriptor, cancellation);
+
                 try
                 {
-                    _ = await _context.Descriptors.AddAsync(descriptor);
+                    Result createResult = await _context.SaveChangesAsync(cancellation) > 0 ?
+                                             await callback.Invoke(descriptor, cancellation):
+                                             Result.Failure(Errors.TransactionFailed("Failed to save data to the database."));
 
-                    if (!(await _context.SaveChangesAsync() > 0) ||
-                        !(await callback.Invoke(descriptor)))
-                        await transaction.RollbackAsync();
+                    if (createResult.IsFailure)
+                    {
+                        await transaction.RollbackAsync(cancellation);
+                        return createResult;
+                    }
 
-                    await transaction.CommitAsync();
-
-                    return true;
+                    await transaction.CommitAsync(cancellation);
                 }
                 catch
                 {
-                    await transaction.RollbackAsync();
+                    await transaction.RollbackAsync(cancellation);
+                    throw;
                 }
             }
 
-            return false;
+            return Result.Success();
         }
 
-        public async Task<bool> Delete(DescriptorEntity descriptor, TransactionDeleteDelegate callback)
+        public async Task<Result> DeleteAsync(DescriptorEntity descriptor,
+                                              TransactionDeleteAsyncDelegate callback,
+                                              CancellationToken cancellation = default)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            using (var transaction = await _context.Database.BeginTransactionAsync(cancellation))
             {
                 try
                 {
-                    if (!(await _context.Descriptors.Where(x=>x.Id==descriptor.Id)
-                                                    .ExecuteDeleteAsync() > 0) ||
-                        !(await callback.Invoke(descriptor)))
-                        await transaction.RollbackAsync();
+                    Result deleteResult = await _context.Descriptors.Where(x => x.Id == descriptor.Id)
+                                                                    .ExecuteDeleteAsync(cancellation) > 0 ?
+                                                    await callback.Invoke(descriptor, cancellation) :
+                                                    Result.Failure(Errors.TransactionFailed("Failed to delete data from the database."));
 
-                    await transaction.CommitAsync();
+                    if (deleteResult.IsFailure)
+                    {
+                        await transaction.RollbackAsync(cancellation);
+                        return deleteResult;
+                    }
 
-                    return true;
+                    await transaction.CommitAsync(cancellation);
                 }
                 catch
                 {
-                    await transaction.RollbackAsync();
+                    await transaction.RollbackAsync(cancellation);
+                    throw;
                 }
-
-                return false;
             }
+
+            return Result.Success();
         }
     }
 }

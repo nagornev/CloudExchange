@@ -15,7 +15,7 @@
             services.AddServices();
             services.AddProviders();
             services.AddControllers(configuration);
-            services.AddBackgrounds();
+            //services.AddBackgrounds();
             services.AddValidators();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
