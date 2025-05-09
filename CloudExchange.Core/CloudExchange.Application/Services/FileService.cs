@@ -153,13 +153,9 @@ namespace CloudExchange.Application.Services
         private async Task<Result> DeleteFile(DescriptorEntity descriptor,
                                               CancellationToken cancellation = default)
         {
-            Result deleteResult = await _desciptorRepository.DeleteAsync(descriptor,
-                                                             async (descriptor, cancellation) => await _dataRepository.DeleteAsync(descriptor, cancellation),
-                                                             cancellation);
-
-            return deleteResult.IsSuccess ?
-                      Result.Success() :
-                      Result.Failure(deleteResult.Error);
+            return await _desciptorRepository.DeleteAsync(descriptor,
+                                                          async (descriptor, cancellation) => await _dataRepository.DeleteAsync(descriptor, cancellation),
+                                                          cancellation);
         }
 
         private async Task<Result<DescriptorEntity>> IsRootAllowed(Guid descriptorId,
@@ -174,8 +170,8 @@ namespace CloudExchange.Application.Services
                             descriptorResult :
                             Result<DescriptorEntity>.Failure(Errors.InvalidRoot("Invalid root password."));
 
-            return descriptorResult.IsFailure?
-                    descriptorResult:
+            return descriptorResult.IsFailure ?
+                    descriptorResult :
                     Result<DescriptorEntity>.Failure(Errors.InvalidRoot("This file does`t have a root password."));
         }
 

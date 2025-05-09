@@ -18,5 +18,7 @@ namespace CloudExchange.Domain.Failures
         public const int InvalidDownload = 6;
 
         public const int InvalidRoot = 7;
+
+        public const int ServiceUnavailable = 8;
     }
 }

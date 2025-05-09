@@ -17,5 +17,7 @@ namespace CloudExchange.Domain.Failures
         public static Error InvalidDownload(string message) => new Error(ErrorTypes.InvalidDownload, message);
 
         public static Error InvalidRoot(string message) => new Error(ErrorTypes.InvalidRoot, message);
+
+        public static Error ServiceUnavailable(string message) => new Error(ErrorTypes.ServiceUnavailable, message);
     }
 }

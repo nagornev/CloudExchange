@@ -15,6 +15,7 @@ namespace CloudExchange.API.Extensions.Startup
                     .Decorate<IDescriptorRepository, DescriptorRepositoryExceptionDecorator>();
 
         private static IServiceCollection AddDataRepository(this IServiceCollection services) =>
-            services.AddScoped<IDataRepository, DataRepository>();
+            services.AddScoped<IDataRepository, DataRepository>()
+                    .Decorate<IDataRepository, DataRepositoryExceptionDecorator>();
     }
 }

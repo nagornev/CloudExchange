@@ -3,7 +3,7 @@ using CloudExchange.OperationResults;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CloudExchange.Domain.Delegates
+namespace CloudExchange.Domain.Abstractions.Delegates
 {
     public delegate Task<Result> TransactionDeleteAsyncDelegate(DescriptorEntity descriptor,
                                                                 CancellationToken cancellation = default);

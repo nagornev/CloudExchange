@@ -10,7 +10,7 @@ namespace CloudExchange.API.Extensions.Startup
     {
         public static IServiceCollection AddProviders(this IServiceCollection services) =>
             services.AddSingleton<ITimeProvider, TimeProvider>()
-                    .AddSingleton<IPathProvider, PathProvider>()
+                    .AddSingleton<IPathProvider, TestPathProvider>()
                     .AddSingleton<IDescriptorCredentialsHashProvider, DescriptorCredentialsHashProvider>();
     }
 }

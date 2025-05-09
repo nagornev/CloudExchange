@@ -1,4 +1,6 @@
-﻿namespace CloudExchange.API.Extensions.Startup
+﻿using Hangfire;
+
+namespace CloudExchange.API.Extensions.Startup
 {
     public static class ApiStartupExtensions
     {
@@ -15,7 +17,7 @@
             services.AddServices();
             services.AddProviders();
             services.AddControllers(configuration);
-            //services.AddBackgrounds();
+            services.AddBackgrounds();
             services.AddValidators();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
@@ -34,6 +36,7 @@
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
+            app.UseHangfireDashboard();
             app.MapControllers();
 
             app.Run();

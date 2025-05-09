@@ -1,6 +1,6 @@
 ﻿using CloudExchange.Domain.Abstractions.Providers;
-using CloudExchange.Domain.ValueObjects;
 using CloudExchange.Domain.Failures;
+using CloudExchange.Domain.ValueObjects;
 using CloudExchange.OperationResults;
 using System;
 

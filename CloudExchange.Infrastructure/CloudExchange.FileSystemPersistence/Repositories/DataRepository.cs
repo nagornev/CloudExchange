@@ -11,13 +11,13 @@ namespace CloudExchange.FileSystemPersistence.Repositories
 
         public async Task<Result<Stream>> GetAsync(DescriptorEntity descriptor, CancellationToken cancellation)
         {
-            if(!Directory.Exists(descriptor.Path))
+            if (!Directory.Exists(descriptor.Path))
                 return Result<Stream>.Failure(Errors.NotFound($"The directory ({descriptor.Path}) does not exist."));
 
             if (!File.Exists($"{descriptor.Path}{descriptor.Id}"))
                 return Result<Stream>.Failure(Errors.InvalidArgument($"The file ({descriptor.Id}) does not exist."));
 
-            Stream stream = new FileStream(descriptor.Path,
+            Stream stream = new FileStream($"{descriptor.Path}{descriptor.Id}",
                                            FileMode.Open,
                                            FileAccess.Read,
                                            FileShare.Read,
@@ -32,12 +32,14 @@ namespace CloudExchange.FileSystemPersistence.Repositories
             if (!Directory.Exists(descriptor.Path))
                 return Result.Failure(Errors.NotFound($"The directory ({descriptor.Path}) does not exist."));
 
-            using (FileStream file = new FileStream(descriptor.Path,
+
+
+            using (FileStream file = new FileStream($"{descriptor.Path}{descriptor.Id}",
                                                     FileMode.Create,
                                                     FileAccess.Write,
                                                     FileShare.None,
                                                     _buffer,
-                                                    useAsync: true))
+                                                    true))
             {
                 await stream.CopyToAsync(file, cancellation);
             }
@@ -53,7 +55,7 @@ namespace CloudExchange.FileSystemPersistence.Repositories
             if (!File.Exists($"{descriptor.Path}{descriptor.Id}"))
                 return Result<Stream>.Failure(Errors.InvalidArgument($"The file ({descriptor.Id}) does not exist."));
 
-            await Task.WhenAll(Task.Run(() => File.Delete($"{descriptor.Path}{descriptor.Id}"), 
+            await Task.WhenAll(Task.Run(() => File.Delete($"{descriptor.Path}{descriptor.Id}"),
                                cancellation));
 
             return Result.Success();

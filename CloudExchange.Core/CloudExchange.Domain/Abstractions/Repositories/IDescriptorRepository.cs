@@ -1,4 +1,4 @@
-﻿using CloudExchange.Domain.Delegates;
+﻿using CloudExchange.Domain.Abstractions.Delegates;
 using CloudExchange.Domain.Entities;
 using CloudExchange.OperationResults;
 using System;

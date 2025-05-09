@@ -1,5 +1,5 @@
-﻿using CloudExchange.Domain.Abstractions.Repositories;
-using CloudExchange.Domain.Delegates;
+﻿using CloudExchange.Domain.Abstractions.Delegates;
+using CloudExchange.Domain.Abstractions.Repositories;
 using CloudExchange.Domain.Entities;
 using CloudExchange.Domain.Failures;
 using CloudExchange.EntitiyFrameworkCorePersistence.Contexts;
@@ -56,7 +56,7 @@ namespace CloudExchange.EntitiyFrameworkCorePersistence.Repositories
                 try
                 {
                     Result createResult = await _context.SaveChangesAsync(cancellation) > 0 ?
-                                             await callback.Invoke(descriptor, cancellation):
+                                             await callback.Invoke(descriptor, cancellation) :
                                              Result.Failure(Errors.TransactionFailed("Failed to save data to the database."));
 
                     if (createResult.IsFailure)
