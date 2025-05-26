@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudExchange.Core", "Cloud
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudExchange.Infrastructure", "CloudExchange.Infrastructure", "{9E433D50-BA3C-416A-96F0-B74998821F46}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudExchange.Presenters", "CloudExchange.Presenters", "{89177B2F-F2B0-4DB8-8CD2-7EEB81CF6DD1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudExchange.Web", "CloudExchange.Web", "{89177B2F-F2B0-4DB8-8CD2-7EEB81CF6DD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.Results", "CloudExchange.Core\CloudExchange.Results\CloudExchange.Results.csproj", "{BA9C8F2F-AB40-C240-E69E-8790FC8B5866}"
 EndProject
@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.FileSystemPer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.HangfireScheduler", "CloudExchange.Infrastructure\CloudExchange.HangfireScheduler\CloudExchange.HangfireScheduler.csproj", "{0F0713D2-4E2F-DB54-74DE-F4384EEFC6FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.API", "CloudExchange.Presenters\CloudExchange.API\CloudExchange.API.csproj", "{24081E2E-ED1D-A561-9542-5021AAAFB56C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.API", "CloudExchange.Web\CloudExchange.API\CloudExchange.API.csproj", "{24081E2E-ED1D-A561-9542-5021AAAFB56C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

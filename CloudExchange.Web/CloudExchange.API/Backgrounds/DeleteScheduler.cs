@@ -5,7 +5,7 @@ namespace CloudExchange.API.Backgrounds
 {
     public class DeleteScheduler : BackgroundService
     {
-        private const int _interval = DescriptorEntity.LifetimeMinumum;
+        private const int _interval = DescriptorEntity.LifetimeMinumum * 1000;
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -24,7 +24,7 @@ namespace CloudExchange.API.Backgrounds
 
                     _ = await schedulerService.ScheduleDelete(_interval);
 
-                    await Task.Delay(_interval * 1000);
+                    await Task.Delay(_interval, stoppingToken);
                 }
             }
         }
