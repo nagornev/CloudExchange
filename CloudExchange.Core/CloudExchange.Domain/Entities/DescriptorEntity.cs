@@ -45,9 +45,9 @@ namespace CloudExchange.Domain.Entities
 
         public string Name { get; private set; }
 
-        public string Path { get; private set; }
-
         public long Weight { get; private set; }
+
+        public string Path { get; private set; }
 
         public long Uploaded { get; private set; }
 
@@ -57,8 +57,8 @@ namespace CloudExchange.Domain.Entities
 
         public static Result<DescriptorEntity> Create(Guid id,
                                                       string name,
-                                                      string path,
                                                       long weight,
+                                                      string path,
                                                       long uploaded,
                                                       int lifetime,
                                                       DescriptorCredentialsValueObject credentials)
@@ -90,8 +90,8 @@ namespace CloudExchange.Domain.Entities
         }
 
         public static Result<DescriptorEntity> New(string name,
-                                                   string path,
                                                    long weight,
+                                                   string path,
                                                    long uploaded,
                                                    int lifetime,
                                                    string download = null,
@@ -103,8 +103,8 @@ namespace CloudExchange.Domain.Entities
             return descriptorCredentialsResult.IsSuccess ?
                         Create(Guid.NewGuid(),
                                name,
-                               path,
                                weight,
+                               path,
                                uploaded,
                                lifetime,
                                descriptorCredentialsResult.Content) :

@@ -1,11 +1,12 @@
-﻿using CloudExchange.Application.Abstractions.Services;
+﻿using CloudExchange.Application.Features.Files.Commands.ScheduleDeleteFile;
 using CloudExchange.Domain.Entities;
+using MediatR;
 
 namespace CloudExchange.API.Backgrounds
 {
     public class DeleteScheduler : BackgroundService
     {
-        private const int _interval = DescriptorEntity.LifetimeMinumum * 1000;
+        private const int _interval = DescriptorEntity.LifetimeMinumum;
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -20,11 +21,10 @@ namespace CloudExchange.API.Backgrounds
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    ISchedulerService schedulerService = scope.ServiceProvider.GetRequiredService<ISchedulerService>();
+                    IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                    _ = await schedulerService.ScheduleDelete(_interval);
-
-                    await Task.Delay(_interval, stoppingToken);
+                    _ = await mediator.Send(new ScheduleDeleteFileCommand(_interval), 
+                                            stoppingToken);
                 }
             }
         }

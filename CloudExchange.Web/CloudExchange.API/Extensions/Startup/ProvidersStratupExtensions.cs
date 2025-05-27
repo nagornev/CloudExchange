@@ -1,9 +1,9 @@
 ﻿using CloudExchange.API.Abstractions.Providers;
 using CloudExchange.API.Providers;
 using CloudExchange.Application.Abstractions.Providers;
+using CloudExchange.Application.Dto;
 using CloudExchange.Application.Providers;
 using CloudExchange.Domain.Abstractions.Providers;
-using CloudExchange.Domain.Dto;
 using CloudExchange.Domain.Failures;
 using CloudExchange.Domain.Providers;
 using System.Net.Mime;

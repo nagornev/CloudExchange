@@ -16,6 +16,8 @@ namespace CloudExchange.API.Extensions.Startup
             services.AddRepositories();
             services.AddServices();
             services.AddProviders();
+            services.AddAutoMapper();
+            services.AddMediator();
             services.AddControllers(configuration);
             services.AddBackgrounds();
             services.AddValidators();

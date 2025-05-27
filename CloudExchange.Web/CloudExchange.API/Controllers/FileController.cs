@@ -1,12 +1,13 @@
 ﻿using CloudExchange.API.Abstractions.Providers;
 using CloudExchange.API.Contracts;
 using CloudExchange.API.Extensions;
-using CloudExchange.Application.Abstractions.Services;
-using CloudExchange.Domain.Dto;
-using CloudExchange.Domain.Entities;
+using CloudExchange.Application.Dto;
+using CloudExchange.Application.Features.Files.Commands.CreateFile;
+using CloudExchange.Application.Features.Files.Commands.DeleteFileByUser;
+using CloudExchange.Application.Features.Files.Queries.GetFile;
 using CloudExchange.OperationResults;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Mime;
 
 namespace CloudExchange.API.Controllers
 {
@@ -14,27 +15,15 @@ namespace CloudExchange.API.Controllers
     [Route("[controller]")]
     public class FileController
     {
-        private readonly IUserFileService _userFileService;
-
-        private readonly IServerFileService _serverFileService;
+        private readonly IMediator _mediator;
 
         private readonly IResultProvider _resultProvider;
 
-        public FileController(IUserFileService userFileService,
-                              IServerFileService serverFileService,
+        public FileController(IMediator mediator,
                               IResultProvider resultProvider)
         {
-            _userFileService = userFileService;
-            _serverFileService = serverFileService;
+            _mediator = mediator;
             _resultProvider = resultProvider;
-        }
-
-        [HttpGet]
-        public async Task<IResult> Get(CancellationToken cancellation = default)
-        {
-            Result<IEnumerable<DescriptorEntity>> descriptorsResult = await _serverFileService.GetDescriptorsAsync(cancellation);
-
-            return _resultProvider.GetResult(descriptorsResult);
         }
 
         [HttpGet]
@@ -43,24 +32,24 @@ namespace CloudExchange.API.Controllers
                                        string? download = null,
                                        CancellationToken cancellation = default)
         {
-            Result<FileDto> fileDtoResult = await _userFileService.GetFileAsync(descriptorId,
-                                                                                download,
-                                                                                cancellation);
+            Result<FileDto> fileResult = await _mediator.Send(new GetFileQuery(descriptorId, 
+                                                                               download), 
+                                                              cancellation);
 
-            return _resultProvider.GetResult(fileDtoResult);
+            return _resultProvider.GetResult(fileResult);
         }
 
         [HttpPost]
         public async Task<IResult> Create([FromForm] CreateContract contract,
                                           CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> createResult = await _userFileService.CreateFileAsync(contract.File.GetName(),
-                                                                                           contract.File.GetWeight(),
-                                                                                           contract.File.GetData(),
-                                                                                           contract.Lifetime,
-                                                                                           contract.Root,
-                                                                                           contract.Download,
-                                                                                           cancellation);
+            Result<DescriptorDto> createResult = await _mediator.Send(new CreateFileCommand(contract.File.GetName(),
+                                                                                            contract.File.GetWeight(),
+                                                                                            contract.File.GetData(),
+                                                                                            contract.Lifetime,
+                                                                                            contract.Root,
+                                                                                            contract.Download), 
+                                                                      cancellation);
 
             return _resultProvider.GetResult(createResult); 
         }
@@ -69,9 +58,9 @@ namespace CloudExchange.API.Controllers
         public async Task<IResult> Delete([FromBody] DeleteContract contract,
                                           CancellationToken cancellation = default)
         {
-            Result deleteResult = await _userFileService.DeleteFileAsync(contract.DescriptorId,
-                                                                         contract.Root,
-                                                                         cancellation);
+            Result deleteResult = await _mediator.Send(new DeleteFileByUserCommand(contract.DescriptorId,
+                                                                                   contract.Root),
+                                                       cancellation);
 
             return _resultProvider.GetResult(deleteResult);
         }
