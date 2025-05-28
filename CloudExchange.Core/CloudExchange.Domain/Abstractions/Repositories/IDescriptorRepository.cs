@@ -27,12 +27,12 @@ namespace CloudExchange.Domain.Abstractions.Repositories
                                                 CancellationToken cancellation = default);
 
         /// <summary>
-        /// Return descriptors about files, that will be dead in <paramref name="deathTime"/>.
+        /// Return descriptors about files, that will be dead in <paramref name="expiringTime"/>.
         /// </summary>
-        /// <param name="deathTime"></param>
+        /// <param name="expiringTime"></param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        Task<Result<IAsyncEnumerable<DescriptorEntity>>> GetAsync(long deathTime,
+        Task<Result<IAsyncEnumerable<DescriptorEntity>>> GetAsync(long expiringTime,
                                                                   CancellationToken cancellation = default);
 
         /// <summary>

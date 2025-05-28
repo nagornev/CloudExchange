@@ -13,7 +13,7 @@ namespace CloudExchange.Domain.Failures
 
         public const int InvalidOperation = 4;
 
-        public const int TransactionFailed = 5;
+        public const int Transaction = 5;
 
         public const int InvalidDownload = 6;
 

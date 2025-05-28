@@ -36,10 +36,10 @@ namespace CloudExchange.EntitiyFrameworkCore.Repositories
                       Result<DescriptorEntity>.Failure(Errors.NotFound($"The descriptor {descriptorId} was not found."));
         }
 
-        public Task<Result<IAsyncEnumerable<DescriptorEntity>>> GetAsync(long deathTime,
+        public Task<Result<IAsyncEnumerable<DescriptorEntity>>> GetAsync(long expiringTime,
                                                                          CancellationToken cancellation = default)
         {
-            IAsyncEnumerable<DescriptorEntity> descriptors = _context.Descriptors.Where(x => (x.Uploaded + x.Lifetime) < deathTime)
+            IAsyncEnumerable<DescriptorEntity> descriptors = _context.Descriptors.Where(x => (x.Uploaded + x.Lifetime) < expiringTime)
                                                                                  .AsAsyncEnumerable();
 
             return Task.FromResult(Result<IAsyncEnumerable<DescriptorEntity>>.Success(descriptors));
@@ -57,7 +57,7 @@ namespace CloudExchange.EntitiyFrameworkCore.Repositories
                 {
                     Result createResult = await _context.SaveChangesAsync(cancellation) > 0 ?
                                              await callback.Invoke(descriptor, cancellation) :
-                                             Result.Failure(Errors.TransactionFailed("Failed to save data to the database."));
+                                             Result.Failure(Errors.TransactionFailed("The creation transaction failed."));
 
                     if (createResult.IsFailure)
                     {
@@ -88,7 +88,7 @@ namespace CloudExchange.EntitiyFrameworkCore.Repositories
                     Result deleteResult = await _context.Descriptors.Where(x => x.Id == descriptor.Id)
                                                                     .ExecuteDeleteAsync(cancellation) > 0 ?
                                                     await callback.Invoke(descriptor, cancellation) :
-                                                    Result.Failure(Errors.TransactionFailed("Failed to delete data from the database."));
+                                                    Result.Failure(Errors.TransactionFailed("The deletion transaction failed."));
 
                     if (deleteResult.IsFailure)
                     {

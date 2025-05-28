@@ -12,7 +12,7 @@ namespace CloudExchange.Domain.Failures
 
         public static Error Interrupted(string message) => new Error(ErrorTypes.Interrupted, message);
 
-        public static Error TransactionFailed(string message) => new Error(ErrorTypes.TransactionFailed, message);
+        public static Error TransactionFailed(string message) => new Error(ErrorTypes.Transaction, message);
 
         public static Error InvalidDownload(string message) => new Error(ErrorTypes.InvalidDownload, message);
 

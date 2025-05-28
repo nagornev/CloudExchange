@@ -53,6 +53,7 @@ namespace CloudExchange.API.Extensions.Startup
                                                                 ErrorTypes.InvalidDownload => Results.Unauthorized(),
                                                                 ErrorTypes.InvalidOperation => Results.StatusCode(500),
                                                                 ErrorTypes.ServiceUnavailable => Results.StatusCode(500),
+                                                                ErrorTypes.Transaction => Results.StatusCode(500),
 
                                                                 _ => Results.BadRequest(result),
                                                             }))
