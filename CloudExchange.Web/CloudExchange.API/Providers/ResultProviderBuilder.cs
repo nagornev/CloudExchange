@@ -1,6 +1,4 @@
-﻿using CloudExchange.API.Abstractions.Providers;
-
-namespace CloudExchange.API.Providers
+﻿namespace CloudExchange.API.Providers
 {
     public class ResultProviderBuilder
     {
@@ -19,7 +17,7 @@ namespace CloudExchange.API.Providers
             return this;
         }
 
-        public ResultProviderBuilder UseFailed(Action<ResultFailedFactoryBuilder> options) 
+        public ResultProviderBuilder UseFailed(Action<ResultFailedFactoryBuilder> options)
         {
             ResultFailedFactoryBuilder builder = new ResultFailedFactoryBuilder();
 

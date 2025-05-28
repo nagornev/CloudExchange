@@ -42,8 +42,8 @@ namespace CloudExchange.API.Controllers
                                        string? download = null,
                                        CancellationToken cancellation = default)
         {
-            Result<FileDto> fileResult = await _mediator.Send(new GetFileQuery(descriptorId, 
-                                                                               download), 
+            Result<FileDto> fileResult = await _mediator.Send(new GetFileQuery(descriptorId,
+                                                                               download),
                                                               cancellation);
 
             return _resultProvider.GetResult(fileResult);
@@ -58,10 +58,10 @@ namespace CloudExchange.API.Controllers
                                                                                             contract.File.GetData(),
                                                                                             contract.Lifetime,
                                                                                             contract.Root,
-                                                                                            contract.Download), 
+                                                                                            contract.Download),
                                                                       cancellation);
 
-            return _resultProvider.GetResult(createResult); 
+            return _resultProvider.GetResult(createResult);
         }
 
         [HttpDelete]

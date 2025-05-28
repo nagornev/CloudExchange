@@ -9,6 +9,6 @@ namespace CloudExchange.Application.Features.Files.Commands.CreateFile
                                     Stream Data,
                                     int Lifetime,
                                     string? Root = null,
-                                    string? Download = null) 
+                                    string? Download = null)
         : IRequest<Result<DescriptorDto>>;
 }

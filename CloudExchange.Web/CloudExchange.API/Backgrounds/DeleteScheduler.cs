@@ -23,7 +23,7 @@ namespace CloudExchange.API.Backgrounds
                 {
                     IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                    _ = await mediator.Send(new ScheduleDeleteFileCommand(_interval), 
+                    _ = await mediator.Send(new ScheduleDeleteFileCommand(_interval),
                                             stoppingToken);
                 }
             }

@@ -4,7 +4,7 @@ namespace CloudExchange.Application.Providers
 {
     public class TimeProvider : ITimeProvider
     {
-        public long NowUnix()
+        public long NowTimestamp()
         {
             return DateTimeOffset.Now.ToUnixTimeSeconds();
         }

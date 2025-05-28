@@ -92,7 +92,7 @@ namespace CloudExchange.EntitiyFrameworkCore.Repositories
                 LogError(exception);
                 return Result.Failure(Errors.TransactionFailed($"The operation to create the descriptor failed."));
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 LogError(exception);
                 return Result.Failure(Errors.ServiceUnavailable($"The descriptors database is unavailable."));

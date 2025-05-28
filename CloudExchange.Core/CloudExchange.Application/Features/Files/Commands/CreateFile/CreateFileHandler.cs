@@ -23,7 +23,7 @@ namespace CloudExchange.Application.Features.Files.Commands.CreateFile
             Result<DescriptorEntity> descriptorEntityResult = DescriptorEntity.New(request.Name,
                                                                                    request.Weight,
                                                                                    _pathProvider.GetPath(),
-                                                                                   _timeProvider.NowUnix(),
+                                                                                   _timeProvider.NowTimestamp(),
                                                                                    request.Lifetime,
                                                                                    request.Download,
                                                                                    request.Root,

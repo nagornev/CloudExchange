@@ -16,8 +16,7 @@ namespace CloudExchange.API.Contracts
 
             #endregion
 
-            #region MyRegion
-
+            #region Root
 
             RuleFor(x => x.Root).NotNull()
                                 .WithMessage("The root password can`t be null or emprty.");

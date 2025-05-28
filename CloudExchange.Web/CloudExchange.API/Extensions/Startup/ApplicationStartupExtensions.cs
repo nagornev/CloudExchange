@@ -25,7 +25,7 @@ namespace CloudExchange.API.Extensions.Startup
 
         private static IServiceCollection AddProviders(this IServiceCollection services) =>
             services.AddSingleton<ITimeProvider, TimeProvider>()
-                    .AddSingleton<IPathProvider, TestPathProvider>()
+                    .AddSingleton<IPathProvider, PathProvider>()
                     .AddSingleton<IDescriptorCredentialsHashProvider, DescriptorCredentialsHashProvider>();
 
         private static IServiceCollection AddFeatureServices(this IServiceCollection services) =>

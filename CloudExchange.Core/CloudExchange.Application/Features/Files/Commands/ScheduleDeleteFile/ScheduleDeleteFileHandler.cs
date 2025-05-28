@@ -14,7 +14,7 @@ namespace CloudExchange.Application.Features.Files.Commands.ScheduleDeleteFile
     {
         public async Task<Result> Handle(ScheduleDeleteFileCommand request, CancellationToken cancellationToken)
         {
-            Result<IAsyncEnumerable<DescriptorEntity>> descriptorEntitiesResult = await _descriptorRepository.GetAsync(_timeProvider.NowUnix() + request.Interval);
+            Result<IAsyncEnumerable<DescriptorEntity>> descriptorEntitiesResult = await _descriptorRepository.GetAsync(_timeProvider.NowTimestamp() + request.Interval);
 
             if (descriptorEntitiesResult.IsSuccess)
                 await foreach (DescriptorEntity descriptorEntity in descriptorEntitiesResult.Content)
@@ -29,8 +29,8 @@ namespace CloudExchange.Application.Features.Files.Commands.ScheduleDeleteFile
 
         private TimeSpan GetDelay(DescriptorEntity descriptorEntity)
         {
-            return TimeSpan.FromSeconds(_timeProvider.NowUnix() - descriptorEntity.Uploaded < descriptorEntity.Lifetime ?
-                                            descriptorEntity.Uploaded + descriptorEntity.Lifetime - _timeProvider.NowUnix() :
+            return TimeSpan.FromSeconds(_timeProvider.NowTimestamp() - descriptorEntity.Uploaded < descriptorEntity.Lifetime ?
+                                            descriptorEntity.Uploaded + descriptorEntity.Lifetime - _timeProvider.NowTimestamp() :
                                             0.001);
         }
     }

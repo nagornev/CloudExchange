@@ -1,7 +1,4 @@
-﻿using CloudExchange.Domain.Failures;
-using CloudExchange.OperationResults;
-
-namespace CloudExchange.Application.Dto
+﻿namespace CloudExchange.Application.Dto
 {
     public class FileDto
     {

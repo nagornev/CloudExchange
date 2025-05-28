@@ -1,5 +1,4 @@
 ﻿using CloudExchange.OperationResults;
-using Microsoft.Identity.Client;
 
 namespace CloudExchange.API.Providers
 {

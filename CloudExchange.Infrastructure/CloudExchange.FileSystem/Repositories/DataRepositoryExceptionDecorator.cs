@@ -3,12 +3,6 @@ using CloudExchange.Domain.Entities;
 using CloudExchange.Domain.Failures;
 using CloudExchange.OperationResults;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudExchange.FileSystem.Repositories
 {
@@ -31,7 +25,7 @@ namespace CloudExchange.FileSystem.Repositories
             {
                 return await _dataRepository.GetAsync(descriptor, cancellation);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 LogError(exception);
                 return Result<Stream>.Failure(Errors.ServiceUnavailable("The data repository is unavailable."));

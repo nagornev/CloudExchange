@@ -5,7 +5,7 @@ namespace CloudExchange.API.Extensions.Startup
 {
     public static class OptionsStartupExtensions
     {
-        public static IServiceCollection AddOptions(this IServiceCollection service, IConfiguration configuration) => 
+        public static IServiceCollection AddOptions(this IServiceCollection service, IConfiguration configuration) =>
             service.AddApplicationOptions(configuration);
 
         private static IServiceCollection AddApplicationOptions(this IServiceCollection services, IConfiguration configuration) =>

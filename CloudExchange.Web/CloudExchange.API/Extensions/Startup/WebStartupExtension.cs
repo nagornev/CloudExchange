@@ -6,11 +6,9 @@ using CloudExchange.Domain.Failures;
 using CloudExchange.OperationResults;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net.Mime;
 
 namespace CloudExchange.API.Extensions.Startup
@@ -18,27 +16,11 @@ namespace CloudExchange.API.Extensions.Startup
     public static class WebStartupExtension
     {
         public static IServiceCollection AddWeb(this IServiceCollection services) =>
-            services.AddConfigures()
-                    .AddCors()
+            services.AddCors()
                     .AddProviders()
                     .AddControllers()
-                    .AddValidators();
-        private static IServiceCollection AddConfigures(this IServiceCollection services) =>
-             services.Configure<IISServerOptions>(options => options.MaxRequestBodySize = null)
-                     .Configure<KestrelServerOptions>(options => options.Limits.MaxRequestBodySize = null)
-                     .Configure<FormOptions>(options => options.MultipartBodyLengthLimit = DescriptorEntity.WeightMaximum)
-                     .Configure<ApiBehaviorOptions>(options =>
-                      options.InvalidModelStateResponseFactory = (context) =>
-                      {
-                          var entry = context.ModelState.FirstOrDefault(x => x.Value?.Errors.Count > 0);
-                      
-                          var field = entry.Key;
-                          var message = entry.Value!
-                                             .Errors.First()
-                                             .ErrorMessage;
-                      
-                          return new BadRequestObjectResult(Result.Failure(Errors.InvalidArgument(message)));
-                      });
+                    .AddValidators()
+                    .AddConfigures();
 
         private static IServiceCollection AddCors(this IServiceCollection services) =>
             services.AddCors(options => options
@@ -52,7 +34,7 @@ namespace CloudExchange.API.Extensions.Startup
         private static IServiceCollection AddControllers(this IServiceCollection services) =>
             services.AddControllers(null)
                     .Services;
-                    
+
         private static IServiceCollection AddProviders(this IServiceCollection services) =>
             services.AddSingleton<IResultProvider>(new ResultProviderBuilder()
                                                         .UseSuccess((options) => options
@@ -79,5 +61,22 @@ namespace CloudExchange.API.Extensions.Startup
         public static IServiceCollection AddValidators(this IServiceCollection services) =>
             services.AddFluentValidationAutoValidation(options => options.DisableDataAnnotationsValidation = true)
                     .AddValidatorsFromAssemblyContaining<Program>();
+
+        private static IServiceCollection AddConfigures(this IServiceCollection services) =>
+             services.Configure<IISServerOptions>(options => options.MaxRequestBodySize = null)
+                     .Configure<KestrelServerOptions>(options => options.Limits.MaxRequestBodySize = null)
+                     .Configure<FormOptions>(options => options.MultipartBodyLengthLimit = DescriptorEntity.WeightMaximum)
+                     .Configure<ApiBehaviorOptions>(options =>
+                      options.InvalidModelStateResponseFactory = (context) =>
+                      {
+                          var entry = context.ModelState.FirstOrDefault(x => x.Value?.Errors.Count > 0);
+
+                          var field = entry.Key;
+                          var message = entry.Value!
+                                             .Errors.First()
+                                             .ErrorMessage;
+
+                          return new BadRequestObjectResult(Result.Failure(Errors.InvalidArgument(message)));
+                      });
     }
 }

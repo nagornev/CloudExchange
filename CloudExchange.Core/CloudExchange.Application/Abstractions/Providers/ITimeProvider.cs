@@ -6,7 +6,7 @@
         /// Return unix timestamp in seconds.
         /// </summary>
         /// <returns></returns>
-        long NowUnix();
+        long NowTimestamp();
 
         /// <summary>
         /// Return current time in DateTime format.

@@ -17,7 +17,7 @@ namespace CloudExchange.Application.Features.Files.Queries.GetFile
     {
         public async Task<Result<FileDto>> Handle(GetFileQuery request, CancellationToken cancellationToken)
         {
-            Result<DescriptorEntity> descriptorEntityResult = await IsDownloadAllowed(request.DescriptorId, 
+            Result<DescriptorEntity> descriptorEntityResult = await IsDownloadAllowed(request.DescriptorId,
                                                                                       request.Download,
                                                                                       cancellationToken);
 
@@ -47,7 +47,7 @@ namespace CloudExchange.Application.Features.Files.Queries.GetFile
             Result<Stream> dataResult = await _dataRepository.GetAsync(descriptorEntity, cancellation);
 
             return dataResult.IsSuccess ?
-                    Result<FileDto>.Success(new FileDto(_mapper.Map<DescriptorDto>(descriptorEntity), dataResult.Content)):
+                    Result<FileDto>.Success(new FileDto(_mapper.Map<DescriptorDto>(descriptorEntity), dataResult.Content)) :
                     Result<FileDto>.Failure(dataResult.Error);
         }
     }
