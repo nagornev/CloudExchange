@@ -6,7 +6,7 @@ using CloudExchange.OperationResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace CloudExchange.EntitiyFrameworkCorePersistence.Repositories
+namespace CloudExchange.EntitiyFrameworkCore.Repositories
 {
     public class DescriptorRepositoryExceptionDecorator : IDescriptorRepository
     {

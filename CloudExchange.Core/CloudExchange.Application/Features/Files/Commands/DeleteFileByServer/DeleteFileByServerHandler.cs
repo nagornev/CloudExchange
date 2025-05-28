@@ -19,10 +19,10 @@ namespace CloudExchange.Application.Features.Files.Commands.DeleteExpiredFile
                     
         }
 
-        private async Task<Result> DeleteFile(DescriptorEntity descriptor,
+        private async Task<Result> DeleteFile(DescriptorEntity descriptorEntity,
                                               CancellationToken cancellation = default)
         {
-            return await _descriptorRepository.DeleteAsync(descriptor,
+            return await _descriptorRepository.DeleteAsync(descriptorEntity,
                                                            async (descriptor, cancellation) => await _dataRepository.DeleteAsync(descriptor, cancellation),
                                                            cancellation);
         }

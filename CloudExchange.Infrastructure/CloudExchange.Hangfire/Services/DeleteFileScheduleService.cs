@@ -3,7 +3,7 @@ using CloudExchange.Domain.Failures;
 using CloudExchange.OperationResults;
 using Hangfire;
 
-namespace CloudExchange.HangfireScheduler.Services
+namespace CloudExchange.Hangfire.Services
 {
     public class DeleteFileScheduleService : IDeleteFileScheduleService
     {

@@ -1,8 +1,8 @@
 ﻿using CloudExchange.Domain.Entities;
-using CloudExchange.EntitiyFrameworkCorePersistence.Configurations;
+using CloudExchange.EntitiyFrameworkCore.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace CloudExchange.EntitiyFrameworkCorePersistence.Contexts
+namespace CloudExchange.EntitiyFrameworkCore.Contexts
 {
     public class DescriptorContext : DbContext
     {

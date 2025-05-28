@@ -34,16 +34,16 @@ namespace CloudExchange.Application.Features.Files.Commands.CreateFile
                     Result<DescriptorDto>.Failure(descriptorEntityResult.Error);
         }
 
-        private async Task<Result<DescriptorDto>> CreateFile(DescriptorEntity descriptor,
+        private async Task<Result<DescriptorDto>> CreateFile(DescriptorEntity descriptorEntity,
                                                              Stream data,
                                                              CancellationToken cancellation = default)
         {
-            Result createResult = await _descriptorRepository.CreateAsync(descriptor,
+            Result createResult = await _descriptorRepository.CreateAsync(descriptorEntity,
                                                                           async (descriptor, cancellation) => await _dataRepository.CreateAsync(descriptor, data, cancellation),
                                                                           cancellation);
 
             return createResult.IsSuccess ?
-                        Result<DescriptorDto>.Success(_mapper.Map<DescriptorDto>(descriptor)) :
+                        Result<DescriptorDto>.Success(_mapper.Map<DescriptorDto>(descriptorEntity)) :
                         Result<DescriptorDto>.Failure(createResult.Error);
         }
     }

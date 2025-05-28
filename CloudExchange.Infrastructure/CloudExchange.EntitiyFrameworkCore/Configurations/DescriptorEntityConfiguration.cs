@@ -3,7 +3,7 @@ using CloudExchange.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CloudExchange.EntitiyFrameworkCorePersistence.Configurations
+namespace CloudExchange.EntitiyFrameworkCore.Configurations
 {
     internal class DescriptorEntityConfiguration : IEntityTypeConfiguration<DescriptorEntity>
     {

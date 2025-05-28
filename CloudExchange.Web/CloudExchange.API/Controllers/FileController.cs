@@ -2,6 +2,7 @@
 using CloudExchange.API.Contracts;
 using CloudExchange.API.Extensions;
 using CloudExchange.Application.Dto;
+using CloudExchange.Application.Features.Descriptors.Queries.GetAllDescriptors;
 using CloudExchange.Application.Features.Files.Commands.CreateFile;
 using CloudExchange.Application.Features.Files.Commands.DeleteFileByUser;
 using CloudExchange.Application.Features.Files.Queries.GetFile;
@@ -24,6 +25,15 @@ namespace CloudExchange.API.Controllers
         {
             _mediator = mediator;
             _resultProvider = resultProvider;
+        }
+
+        [HttpGet]
+        public async Task<IResult> Get(CancellationToken cancellation = default)
+        {
+            Result<IEnumerable<DescriptorDto>> descriptorsResult = await _mediator.Send(new GetAllDescriptorsQuery(),
+                                                                                        cancellation);
+
+            return _resultProvider.GetResult(descriptorsResult);
         }
 
         [HttpGet]

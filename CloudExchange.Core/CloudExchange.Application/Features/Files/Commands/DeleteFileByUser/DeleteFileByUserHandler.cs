@@ -25,23 +25,23 @@ namespace CloudExchange.Application.Features.Files.Commands.DeleteFileByUser
                                                                    string root,
                                                                    CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> descriptorResult = await _descriptorRepository.GetAsync(descriptorId, cancellation);
+            Result<DescriptorEntity> descriptorEntityResult = await _descriptorRepository.GetAsync(descriptorId, cancellation);
 
-            if (descriptorResult.IsSuccess &&
-                descriptorResult.Content.Credentials.Root != null)
-                return _descriptorCredentialsHashProvider.Verify(root, descriptorResult.Content.Credentials.Root) ?
-                            descriptorResult :
+            if (descriptorEntityResult.IsSuccess &&
+                descriptorEntityResult.Content.Credentials?.Root != null)
+                return _descriptorCredentialsHashProvider.Verify(root, descriptorEntityResult.Content.Credentials.Root) ?
+                            descriptorEntityResult :
                             Result<DescriptorEntity>.Failure(Errors.InvalidRoot("Invalid root password."));
 
-            return descriptorResult.IsFailure ?
-                    descriptorResult :
-                    Result<DescriptorEntity>.Failure(Errors.InvalidRoot("This file does`t have a root password."));
+            return descriptorEntityResult.IsFailure ?
+                    descriptorEntityResult :
+                    Result<DescriptorEntity>.Failure(Errors.NullOrEmpty("This file does`t have a root password."));
         }
 
-        private async Task<Result> DeleteFile(DescriptorEntity descriptor,
+        private async Task<Result> DeleteFile(DescriptorEntity descriptorEntity,
                                               CancellationToken cancellation = default)
         {
-            return await _descriptorRepository.DeleteAsync(descriptor,
+            return await _descriptorRepository.DeleteAsync(descriptorEntity,
                                                            async (descriptor, cancellation) => await _dataRepository.DeleteAsync(descriptor, cancellation),
                                                            cancellation);
         }

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace CloudExchange.EntitiyFrameworkCorePersistence.Migrations
+namespace CloudExchange.EntitiyFrameworkCore.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration

@@ -1,25 +1,25 @@
 ﻿using CloudExchange.Application.Abstractions.Providers;
 using CloudExchange.Application.Abstractions.Services.Features.Files;
-using CloudExchange.Application.Dto;
-using CloudExchange.Application.Features.Descriptors.Queries.GetExpiringDescriptors;
+using CloudExchange.Domain.Abstractions.Repositories;
+using CloudExchange.Domain.Entities;
 using CloudExchange.OperationResults;
 using MediatR;
 
 namespace CloudExchange.Application.Features.Files.Commands.ScheduleDeleteFile
 {
-    public class ScheduleDeleteFileHandler(IMediator _mediator,
+    public class ScheduleDeleteFileHandler(IDescriptorRepository _descriptorRepository,
                                            IDeleteFileScheduleService _deleteFileScheduleService,
                                            ITimeProvider _timeProvider)
         : IRequestHandler<ScheduleDeleteFileCommand, Result>
     {
         public async Task<Result> Handle(ScheduleDeleteFileCommand request, CancellationToken cancellationToken)
         {
-            Result<IAsyncEnumerable<DescriptorDto>> descriptorsResult = await _mediator.Send(new GetExpiringDescriptorsQuery(_timeProvider.NowUnix() + request.Interval));
+            Result<IAsyncEnumerable<DescriptorEntity>> descriptorEntitiesResult = await _descriptorRepository.GetAsync(_timeProvider.NowUnix() + request.Interval);
 
-            if (descriptorsResult.IsSuccess)
-                await foreach (DescriptorDto descriptor in descriptorsResult.Content)
-                    _ = _deleteFileScheduleService.ScheduleDeleteFile(descriptor.Id,
-                                                                      GetDelay(descriptor),
+            if (descriptorEntitiesResult.IsSuccess)
+                await foreach (DescriptorEntity descriptorEntity in descriptorEntitiesResult.Content)
+                    _ = _deleteFileScheduleService.ScheduleDeleteFile(descriptorEntity.Id,
+                                                                      GetDelay(descriptorEntity),
                                                                       cancellationToken);
 
             await Task.Delay(request.Interval * 1000, cancellationToken);
@@ -27,10 +27,10 @@ namespace CloudExchange.Application.Features.Files.Commands.ScheduleDeleteFile
             return Result.Success();
         }
 
-        private TimeSpan GetDelay(DescriptorDto descriptor)
+        private TimeSpan GetDelay(DescriptorEntity descriptorEntity)
         {
-            return TimeSpan.FromSeconds(_timeProvider.NowUnix() - descriptor.Uploaded < descriptor.Lifetime ?
-                                            descriptor.Uploaded + descriptor.Lifetime - _timeProvider.NowUnix() :
+            return TimeSpan.FromSeconds(_timeProvider.NowUnix() - descriptorEntity.Uploaded < descriptorEntity.Lifetime ?
+                                            descriptorEntity.Uploaded + descriptorEntity.Lifetime - _timeProvider.NowUnix() :
                                             0.001);
         }
     }

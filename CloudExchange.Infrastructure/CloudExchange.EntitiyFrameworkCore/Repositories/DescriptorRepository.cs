@@ -2,11 +2,11 @@
 using CloudExchange.Domain.Abstractions.Repositories;
 using CloudExchange.Domain.Entities;
 using CloudExchange.Domain.Failures;
-using CloudExchange.EntitiyFrameworkCorePersistence.Contexts;
+using CloudExchange.EntitiyFrameworkCore.Contexts;
 using CloudExchange.OperationResults;
 using Microsoft.EntityFrameworkCore;
 
-namespace CloudExchange.EntitiyFrameworkCorePersistence.Repositories
+namespace CloudExchange.EntitiyFrameworkCore.Repositories
 {
     public class DescriptorRepository : IDescriptorRepository
     {

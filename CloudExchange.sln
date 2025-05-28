@@ -15,11 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.Domain", "Clo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.Application", "CloudExchange.Core\CloudExchange.Application\CloudExchange.Application.csproj", "{C1B05E7C-A3F1-E2B6-EEED-607FE2F3A9F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.EntitiyFrameworkCorePersistence", "CloudExchange.Infrastructure\CloudExchange.EntitiyFrameworkCorePersistence\CloudExchange.EntitiyFrameworkCorePersistence.csproj", "{EEAB91B2-0995-61CF-0A4B-0A1407CD35CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.EntitiyFrameworkCore", "CloudExchange.Infrastructure\CloudExchange.EntitiyFrameworkCore\CloudExchange.EntitiyFrameworkCore.csproj", "{EEAB91B2-0995-61CF-0A4B-0A1407CD35CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.FileSystemPersistence", "CloudExchange.Infrastructure\CloudExchange.FileSystemPersistence\CloudExchange.FileSystemPersistence.csproj", "{ACEED39D-7A62-F60F-7755-4F245EF797AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.FileSystem", "CloudExchange.Infrastructure\CloudExchange.FileSystem\CloudExchange.FileSystem.csproj", "{ACEED39D-7A62-F60F-7755-4F245EF797AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.HangfireScheduler", "CloudExchange.Infrastructure\CloudExchange.HangfireScheduler\CloudExchange.HangfireScheduler.csproj", "{0F0713D2-4E2F-DB54-74DE-F4384EEFC6FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.Hangfire", "CloudExchange.Infrastructure\CloudExchange.Hangfire\CloudExchange.Hangfire.csproj", "{0F0713D2-4E2F-DB54-74DE-F4384EEFC6FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudExchange.API", "CloudExchange.Web\CloudExchange.API\CloudExchange.API.csproj", "{24081E2E-ED1D-A561-9542-5021AAAFB56C}"
 EndProject

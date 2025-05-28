@@ -3,7 +3,7 @@ using CloudExchange.Domain.Entities;
 using CloudExchange.Domain.Failures;
 using CloudExchange.OperationResults;
 
-namespace CloudExchange.FileSystemPersistence.Repositories
+namespace CloudExchange.FileSystem.Repositories
 {
     public class DataRepository : IDataRepository
     {

@@ -30,24 +30,24 @@ namespace CloudExchange.Application.Features.Files.Queries.GetFile
                                                                        string? download,
                                                                        CancellationToken cancellation = default)
         {
-            Result<DescriptorEntity> descriptorResult = await _descriptorRepository.GetAsync(descriptorId, cancellation);
+            Result<DescriptorEntity> descriptorEntityResult = await _descriptorRepository.GetAsync(descriptorId, cancellation);
 
-            if (descriptorResult.IsSuccess &&
-                descriptorResult.Content.Credentials.Download != null)
-                return _descriptorCredentialsHashProvider.Verify(download, descriptorResult.Content.Credentials.Download) ?
-                            descriptorResult :
+            if (descriptorEntityResult.IsSuccess &&
+                descriptorEntityResult.Content.Credentials?.Download != null)
+                return _descriptorCredentialsHashProvider.Verify(download, descriptorEntityResult.Content.Credentials.Download) ?
+                            descriptorEntityResult :
                             Result<DescriptorEntity>.Failure(Errors.InvalidDownload("Invalid download password."));
 
-            return descriptorResult;
+            return descriptorEntityResult;
         }
 
-        private async Task<Result<FileDto>> GetFile(DescriptorEntity descriptor,
+        private async Task<Result<FileDto>> GetFile(DescriptorEntity descriptorEntity,
                                                     CancellationToken cancellation = default)
         {
-            Result<Stream> dataResult = await _dataRepository.GetAsync(descriptor, cancellation);
+            Result<Stream> dataResult = await _dataRepository.GetAsync(descriptorEntity, cancellation);
 
             return dataResult.IsSuccess ?
-                    Result<FileDto>.Success(new FileDto(_mapper.Map<DescriptorDto>(descriptor), dataResult.Content)):
+                    Result<FileDto>.Success(new FileDto(_mapper.Map<DescriptorDto>(descriptorEntity), dataResult.Content)):
                     Result<FileDto>.Failure(dataResult.Error);
         }
     }

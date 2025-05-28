@@ -30,9 +30,9 @@
     <ProjectReference Include="..\..\CloudExchange.Core\CloudExchange.Application\CloudExchange.Application.csproj" />
     <ProjectReference Include="..\..\CloudExchange.Core\CloudExchange.Domain\CloudExchange.Domain.csproj" />
     <ProjectReference Include="..\..\CloudExchange.Core\CloudExchange.Results\CloudExchange.Results.csproj" />
-    <ProjectReference Include="..\..\CloudExchange.Infrastructure\CloudExchange.EntitiyFrameworkCorePersistence\CloudExchange.EntitiyFrameworkCorePersistence.csproj" />
-    <ProjectReference Include="..\..\CloudExchange.Infrastructure\CloudExchange.FileSystemPersistence\CloudExchange.FileSystemPersistence.csproj" />
-    <ProjectReference Include="..\..\CloudExchange.Infrastructure\CloudExchange.HangfireScheduler\CloudExchange.HangfireScheduler.csproj" />
+    <ProjectReference Include="..\..\CloudExchange.Infrastructure\CloudExchange.EntitiyFrameworkCore\CloudExchange.EntitiyFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\CloudExchange.Infrastructure\CloudExchange.FileSystem\CloudExchange.FileSystem.csproj" />
+    <ProjectReference Include="..\..\CloudExchange.Infrastructure\CloudExchange.Hangfire\CloudExchange.Hangfire.csproj" />
   </ItemGroup>
 
 </Project>

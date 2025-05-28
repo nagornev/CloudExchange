@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloudExchange.FileSystemPersistence.Repositories
+namespace CloudExchange.FileSystem.Repositories
 {
     public class DataRepositoryExceptionDecorator : IDataRepository
     {

@@ -9,18 +9,11 @@ namespace CloudExchange.API.Extensions.Startup
             var configuration = builder.Configuration;
             var services = builder.Services;
 
-            services.AddCors(configuration);
-            services.AddConstraints();
             services.AddOptions(configuration);
-            services.AddContexts(configuration);
-            services.AddRepositories();
-            services.AddServices();
-            services.AddProviders();
-            services.AddAutoMapper();
-            services.AddMediator();
-            services.AddControllers(configuration);
+            services.AddApplication();
+            services.AddInfrastructure(configuration);
+            services.AddWeb();
             services.AddBackgrounds();
-            services.AddValidators();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
