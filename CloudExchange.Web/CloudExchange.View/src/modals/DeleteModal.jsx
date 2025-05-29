@@ -22,7 +22,15 @@ export default function DeleteModal({ open, onClose }) {
             }
         });
 
-        setResponse(await response.json());
+        setResponse(response.ok? 
+                        await response.json():
+                        response.status != 401?
+                            await response.json():
+                            {success : false,
+                             error: {
+                                message: "Unauthorized."
+                             }
+                            });
     }
 
     function getUrl() {

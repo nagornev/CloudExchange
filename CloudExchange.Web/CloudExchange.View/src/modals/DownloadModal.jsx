@@ -13,9 +13,17 @@ export default function DownloadModal({ open, onClose }) {
 
     async function downloadFile() {
         const url = getUrl();
-        const response = await fetch(url)
+        const response = await fetch(url);
 
-        setResponse(response.ok ? await saveFile(response) : await response.json());
+        setResponse(response.ok ? 
+                        await saveFile(response) : 
+                        response.status != 401?
+                            await response.json():
+                            {success : false,
+                             error: {
+                                message: "Unauthorized."
+                             }
+                            });
     }
 
     function getUrl() {
