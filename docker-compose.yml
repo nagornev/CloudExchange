@@ -1,0 +1,162 @@
+version: "3.9"
+
+services:
+  cloudexchange_service:
+    container_name: cloudexchange_service
+    restart: always
+    build: 
+      context: .
+      dockerfile: .\CloudExchange.Web\CloudExchange.API\Dockerfile
+    ports:
+      - 7000:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    depends_on:
+      - descriptor_db
+      - scheduler
+      - localstack
+      - init-localstack
+    networks:
+      - application
+
+  cloudexchange_view:
+    container_name: cloudexchange_view
+    restart: always
+    build: 
+      context: .\CloudExchange.Web\CloudExchange.View
+      dockerfile: .\Dockerfile
+    ports:
+      - 7001:3000
+    depends_on:
+      - cloudexchange_service
+    networks:
+      - application
+
+  descriptor_db:
+    container_name: descriptor_db
+    image: postgres:16
+    environment:
+      POSTGRES_DB: Db
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: HHHHhhhh1111
+    ports:
+      - "5001:5432"
+    networks:
+      - application
+        
+  scheduler:
+    container_name: scheduler
+    image: postgres:16
+    environment:
+      POSTGRES_DB: Scheduler
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: HHHHhhhh1111
+    ports:
+      - "5002:5432"
+    networks:
+      - application
+
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:4-management
+    hostname: rabbit
+    restart: always
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=mquser
+      - RABBITMQ_DEFAULT_PASS=HHHHhhhh1111
+    networks:
+      - application
+  
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,sqs,sns
+      - DEBUG=1
+      - EXTRA_CORS_ALLOWED_ORIGINS=http://localhost:7001
+    networks:
+      - application
+      
+  init-localstack:
+    container_name: init-localstack
+    image: amazon/aws-cli:2.15.0
+    depends_on:
+        - localstack
+    environment:
+        AWS_ACCESS_KEY_ID: test
+        AWS_SECRET_ACCESS_KEY: test
+        AWS_DEFAULT_REGION: us-east-1
+    entrypoint: >
+        sh -c "
+        echo '⏳ Ждём LocalStack...';
+        sleep 20;
+    
+        echo '📦 Создаём очередь';
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://files;
+    
+        echo '🪣 Создаём бакет';
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://files;
+    
+        echo '🌐 Настраиваем CORS';
+        echo '{
+        \"CORSRules\": [{
+            \"AllowedHeaders\": [\"*\"],
+            \"AllowedMethods\": [\"PUT\", \"GET\", \"POST\", \"HEAD\", \"OPTIONS\"],
+            \"AllowedOrigins\": [\"http://localhost:7001\"],
+            \"ExposeHeaders\": [\"ETag\"],
+            \"MaxAgeSeconds\": 3000
+        }]
+        }' > /tmp/cors.json;
+        aws --endpoint-url=http://localstack:4566 s3api put-bucket-cors --bucket files --cors-configuration file:///tmp/cors.json;
+        
+        echo '📨 Создаём SQS очередь';
+        aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name file-events;
+        
+        echo '🔔 Создаём SNS topic';
+        aws --endpoint-url=http://localstack:4566 sns create-topic --name file-events-topic;
+        
+        echo '📎 Подписываем SQS на SNS';
+        aws --endpoint-url=http://localstack:4566 sns subscribe --topic-arn arn:aws:sns:us-east-1:000000000000:file-events-topic --protocol sqs --notification-endpoint arn:aws:sqs:us-east-1:000000000000:file-events --attributes RawMessageDelivery=true;
+    
+        echo '🔗 Настраиваем политику SQS';
+        echo '{
+        \"Policy\": \"{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"SQS:SendMessage\\\",\\\"Resource\\\":\\\"arn:aws:sqs:us-east-1:000000000000:file-events\\\",\\\"Condition\\\":{\\\"ArnEquals\\\":{\\\"aws:SourceArn\\\":\\\"arn:aws:s3:::files\\\"}}}]}\" 
+        }' > /tmp/policy.json;
+        aws --endpoint-url=http://localstack:4566 sqs set-queue-attributes --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/file-events --attributes file:///tmp/policy.json;
+    
+        echo '🔔 Настраиваем уведомления S3 → SQS';
+        echo '{
+        \"QueueConfigurations\": [{
+            \"QueueArn\": \"arn:aws:sqs:us-east-1:000000000000:file-events\",
+            \"Events\": [\"s3:ObjectCreated:*\"]
+        }]
+        }' > /tmp/notification.json;
+        aws --endpoint-url=http://localstack:4566 s3api put-bucket-notification-configuration --bucket files --notification-configuration file:///tmp/notification.json;
+    
+        echo '✅ LocalStack готов к работе';
+        tail -f /dev/null
+        "
+    networks:
+      - application
+        
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+        - 5000:8080
+    networks:
+        - application
+
+networks:
+  application:
+    driver: bridge

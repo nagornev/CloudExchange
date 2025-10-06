@@ -1,0 +1,57 @@
+dialog {
+    position: fixed;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    visibility: hidden;
+    margin: 0;
+    width: 80vw;
+    height: 40vh;
+    border-radius: 0px 0px 10px 10px;
+    border-color: white;
+    background-color: white;
+    max-width: 500px;
+    max-height: 350px;
+}
+
+@keyframes slideDown {
+    0% {
+        top: -10%;
+        opacity: 0;
+    }
+
+    100% {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+dialog[open] {
+    animation: slideDown 0.3s ease-out forwards;
+    visibility: visible;
+}
+
+
+.modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+.modal-workspace {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    flex-grow: 1;
+    gap: 1vh;
+    margin-top: 1vh;
+}
+
+.close-button:focus {
+    outline: none;
+}

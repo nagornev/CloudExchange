@@ -1,0 +1,51 @@
+.delete-modal-form{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.delete-modal-form-workspace{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 1vh;
+    justify-content: center;
+}
+
+
+.delete-modal-response{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.delete-modal-response-workspace{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    gap: 1vh;
+}
+
+.delete-modal-response-true{
+    color:green;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 3vh;
+}
+
+.delete-modal-response-false{
+    color:red;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 3vh;
+}
+
+.delete-modal-response p{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 1.7vh;
+}

@@ -1,0 +1,57 @@
+.service{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.service-header{
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background-color: #6847F9;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.service-header:hover::after {
+    width: 100%;
+}
+
+.service-header-image{
+    height: 5vh;
+}
+
+.service-header-name{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 3vh;
+    color: #6847F9;
+}
+
+
+.service-description{
+    width: 15vw;
+    height: 10vh;
+    min-width: 150px;
+}
+
+.service-description p{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 200;
+    font-size: 1.7vh;
+}
