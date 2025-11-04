@@ -1,0 +1,32 @@
+name: Check
+
+on: push
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v5
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v5
+              wiht:
+                dotnet-version: '8.0.x'
+            - name: Restore
+              run: dotnet restore
+            - name: Build
+              run: dotnet build --no-restore
+    test:
+        needs: [build]
+        runs-on: ubuntu-latest
+        steps:
+           - name: Checkout
+             uses: actions/checkout@v5
+           - name: Setup .NET
+             uses: actions/setup-dotnet@v5
+             wiht:
+               dotnet-version: '8.0.x'
+           - name: Restore
+             run: dotnet restore
+           - name: Test
+             run: dotnet test -v detailed
