@@ -13,9 +13,9 @@ jobs:
               with:
                 dotnet-version: '8.0.x'
             - name: Restore
-              run: dotnet restore
+              run: dotnet restore CloudExchange.sln
             - name: Build
-              run: dotnet build --no-restore
+              run: dotnet build CloudExchange.sln --no-restore
     test:
         needs: [build]
         runs-on: ubuntu-latest
@@ -27,6 +27,6 @@ jobs:
              with:
                dotnet-version: '8.0.x'
            - name: Restore
-             run: dotnet restore
+             run: dotnet restore CloudExchange.sln
            - name: Test
-             run: dotnet test -v detailed
+             run: dotnet test CloudExchange.sln -v detailed
